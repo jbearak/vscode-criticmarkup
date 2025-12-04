@@ -1,11 +1,11 @@
 {
-    "Addition": {
-        "prefix": "Addition",
-        "body": "{++$1++}",
+    "Mark as addition": {
+        "prefix": "Mark as addition",
+        "body": "{++$TM_SELECTED_TEXT++}",
         "description": "Add text."
     },
-    "Deletion": {
-        "prefix": "Deletion",
+    "Mark as deletion": {
+        "prefix": "Mark as deletion",
         "body": "{--$TM_SELECTED_TEXT--}",
         "description": "Delete text."
     },
