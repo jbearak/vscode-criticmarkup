@@ -61,7 +61,6 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "bun run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./"
   },
