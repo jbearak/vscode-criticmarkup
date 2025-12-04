@@ -111,7 +111,7 @@ bun --hot ./index.ts
 For more information, read the Bun API docs in `node_modules/bun-types/docs/**.md`.
 
 
-## VS Code Extension Development
+## VS Code / Kiro Extension Development
 
 ### Building the Extension
 
@@ -135,19 +135,25 @@ Package the extension into a `.vsix` file:
 bunx vsce package
 ```
 
-This creates `vscode-criticmarkup-0.3.0.vsix` in the project root.
+This creates a `.vsix` file in the project root (version number is determined by `package.json`).
 
 ### Installing the Extension
 
-Install the packaged extension:
+Install the packaged extension using the appropriate CLI for your editor:
 
+**For VS Code:**
 ```sh
-code --install-extension vscode-criticmarkup-0.3.0.vsix
+code --install-extension <extension-name>.vsix
 ```
 
-Or via VS Code UI:
-1. Open Extensions view (Cmd+Shift+X)
+**For Kiro:**
+```sh
+kiro --install-extension <extension-name>.vsix
+```
+
+Or via the editor UI:
+1. Open Extensions view (Cmd+Shift+X / Ctrl+Shift+X)
 2. Click "..." menu → "Install from VSIX..."
 3. Select the `.vsix` file
 
-After installation, reload VS Code to activate the extension.
+After installation, reload the editor to activate the extension.
