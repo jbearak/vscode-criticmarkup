@@ -35,12 +35,12 @@
     "commands": [
       {
         "command": "criticmarkup.nextChange",
-        "title": "CriticMarkup: Next Change",
+        "title": "Comment or Markup: Next",
         "icon": "$(arrow-down)"
       },
       {
         "command": "criticmarkup.prevChange",
-        "title": "CriticMarkup: Previous Change",
+        "title": "Comment or Markup: Previous",
         "icon": "$(arrow-up)"
       }
     ],
