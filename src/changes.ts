@@ -1,36 +1,20 @@
 import * as vscode from 'vscode';
 
-const patterns = [
-	/\{\+\+([\s\S]+?)\+\+\}/g,
-	/\{--([\s\S]+?)--\}/g,
-	/\{\~\~([\s\S]+?)\~\~\}/g,
-	/\{>>([\s\S]+?)<<\}/g,
-	/\{==([\s\S]+?)==\}/g,
-	/\~\~([\s\S]+?)\~\~/g,
-	/<!--([\s\S]+?)-->/g,
-];
+// Combined pattern for all CriticMarkup syntax in a single regex
+const combinedPattern = /\{\+\+([\s\S]+?)\+\+\}|\{--([\s\S]+?)--\}|\{\~\~([\s\S]+?)\~\~\}|\{>>([\s\S]+?)<<\}|\{==([\s\S]+?)==\}|\~\~([\s\S]+?)\~\~|<!--([\s\S]+?)-->/g;
 
 export function getAllMatches(document: vscode.TextDocument): vscode.Range[] {
 	const text = document.getText();
 	const ranges: vscode.Range[] = [];
 
-	for (const pattern of patterns) {
-		let match;
-		while ((match = pattern.exec(text)) !== null) {
-			const startPos = document.positionAt(match.index);
-			const endPos = document.positionAt(match.index + match[0].length);
-			ranges.push(new vscode.Range(startPos, endPos));
-		}
+	let match;
+	while ((match = combinedPattern.exec(text)) !== null) {
+		const startPos = document.positionAt(match.index);
+		const endPos = document.positionAt(match.index + match[0].length);
+		ranges.push(new vscode.Range(startPos, endPos));
 	}
-	// Sort ranges by start position, then by end position (longest first) to ensure efficient filtering
-	ranges.sort((a, b) => {
-		const startDiff = a.start.compareTo(b.start);
-		if (startDiff !== 0) {
-			return startDiff;
-		}
-		return b.end.compareTo(a.end);
-	});
 
+	// Ranges are already in document order from single-pass regex
 	// Filter out contained ranges (O(N) pass)
 	const filteredRanges: vscode.Range[] = [];
 	let lastKept: vscode.Range | undefined;
