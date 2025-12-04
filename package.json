@@ -8,7 +8,6 @@
 	},
 	"categories": [
 		"Snippets",
-		"Keymaps",
 		"Programming Languages",
 		"Other"
 	],
@@ -55,48 +54,6 @@
 			{
 				"language": "markdown",
 				"path": "./snippets.json"
-			}
-		],
-		"keybindings": [
-			{
-				"key": "ctrl+shift+a",
-				"command": "editor.action.insertSnippet",
-				"when": "editorTextFocus",
-				"args": {
-					"name": "Addition"
-				}
-			},
-			{
-				"key": "ctrl+shift+d",
-				"command": "editor.action.insertSnippet",
-				"when": "editorTextFocus",
-				"args": {
-					"name": "Deletion"
-				}
-			},
-			{
-				"key": "ctrl+shift+s",
-				"command": "editor.action.insertSnippet",
-				"when": "editorTextFocus",
-				"args": {
-					"name": "Substitution"
-				}
-			},
-			{
-				"key": "ctrl+shift+c",
-				"command": "editor.action.insertSnippet",
-				"when": "editorTextFocus",
-				"args": {
-					"name": "Comment"
-				}
-			},
-			{
-				"key": "ctrl+shift+h",
-				"command": "editor.action.insertSnippet",
-				"when": "editorTextFocus",
-				"args": {
-					"name": "Highlight"
-				}
 			}
 		],
 		"grammars": [
