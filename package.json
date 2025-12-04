@@ -42,6 +42,116 @@
         "command": "criticmarkup.prevChange",
         "title": "Comment or Markup: Previous",
         "icon": "$(arrow-up)"
+      },
+      {
+        "command": "criticmarkup.markAddition",
+        "title": "Mark as Addition"
+      },
+      {
+        "command": "criticmarkup.markDeletion",
+        "title": "Mark as Deletion"
+      },
+      {
+        "command": "criticmarkup.markSubstitution",
+        "title": "Substitution"
+      },
+      {
+        "command": "criticmarkup.highlight",
+        "title": "Highlight"
+      },
+      {
+        "command": "criticmarkup.insertComment",
+        "title": "Comment"
+      },
+      {
+        "command": "criticmarkup.highlightAndComment",
+        "title": "Highlight and Comment"
+      },
+      {
+        "command": "criticmarkup.substituteAndComment",
+        "title": "Substitute and Comment"
+      },
+      {
+        "command": "criticmarkup.additionAndComment",
+        "title": "Addition and Comment"
+      },
+      {
+        "command": "criticmarkup.deletionAndComment",
+        "title": "Deletion and Comment"
+      },
+      {
+        "command": "markdown.formatBold",
+        "title": "Bold"
+      },
+      {
+        "command": "markdown.formatItalic",
+        "title": "Italic"
+      },
+      {
+        "command": "markdown.formatBoldItalic",
+        "title": "Bold Italic"
+      },
+      {
+        "command": "markdown.formatUnderline",
+        "title": "Underline"
+      },
+      {
+        "command": "markdown.formatInlineCode",
+        "title": "Inline Code"
+      },
+      {
+        "command": "markdown.formatCodeBlock",
+        "title": "Code Block"
+      },
+      {
+        "command": "markdown.formatBulletedList",
+        "title": "Bulleted List"
+      },
+      {
+        "command": "markdown.formatNumberedList",
+        "title": "Numbered List"
+      },
+      {
+        "command": "markdown.formatQuoteBlock",
+        "title": "Quote Block"
+      },
+      {
+        "command": "markdown.formatHeading1",
+        "title": "Heading 1"
+      },
+      {
+        "command": "markdown.formatHeading2",
+        "title": "Heading 2"
+      },
+      {
+        "command": "markdown.formatHeading3",
+        "title": "Heading 3"
+      },
+      {
+        "command": "markdown.formatHeading4",
+        "title": "Heading 4"
+      },
+      {
+        "command": "markdown.formatHeading5",
+        "title": "Heading 5"
+      },
+      {
+        "command": "markdown.formatHeading6",
+        "title": "Heading 6"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "markdown.annotations",
+        "label": "Markdown Annotations"
+      },
+      {
+        "id": "markdown.formatting",
+        "label": "Markdown Formatting"
+      },
+      {
+        "id": "markdown.heading",
+        "label": "Heading"
       }
     ],
     "menus": {
@@ -55,6 +165,149 @@
           "command": "criticmarkup.nextChange",
           "when": "editorLangId == markdown && !isInDiffEditor",
           "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "submenu": "markdown.annotations",
+          "when": "editorLangId == markdown",
+          "group": "9_markdown@1"
+        },
+        {
+          "submenu": "markdown.formatting",
+          "when": "editorLangId == markdown",
+          "group": "9_markdown@2"
+        }
+      ],
+      "markdown.annotations": [
+        {
+          "command": "criticmarkup.markAddition",
+          "when": "editorLangId == markdown",
+          "group": "1_criticmarkup@1"
+        },
+        {
+          "command": "criticmarkup.markDeletion",
+          "when": "editorLangId == markdown",
+          "group": "1_criticmarkup@2"
+        },
+        {
+          "command": "criticmarkup.markSubstitution",
+          "when": "editorLangId == markdown",
+          "group": "1_criticmarkup@3"
+        },
+        {
+          "command": "criticmarkup.highlight",
+          "when": "editorLangId == markdown",
+          "group": "1_criticmarkup@4"
+        },
+        {
+          "command": "criticmarkup.insertComment",
+          "when": "editorLangId == markdown",
+          "group": "1_criticmarkup@5"
+        },
+        {
+          "command": "criticmarkup.highlightAndComment",
+          "when": "editorLangId == markdown",
+          "group": "1_criticmarkup@6"
+        },
+        {
+          "command": "criticmarkup.substituteAndComment",
+          "when": "editorLangId == markdown",
+          "group": "1_criticmarkup@7"
+        },
+        {
+          "command": "criticmarkup.additionAndComment",
+          "when": "editorLangId == markdown",
+          "group": "1_criticmarkup@8"
+        },
+        {
+          "command": "criticmarkup.deletionAndComment",
+          "when": "editorLangId == markdown",
+          "group": "1_criticmarkup@9"
+        }
+      ],
+      "markdown.formatting": [
+        {
+          "command": "markdown.formatBold",
+          "when": "editorLangId == markdown",
+          "group": "1_format@1"
+        },
+        {
+          "command": "markdown.formatItalic",
+          "when": "editorLangId == markdown",
+          "group": "1_format@2"
+        },
+        {
+          "command": "markdown.formatBoldItalic",
+          "when": "editorLangId == markdown",
+          "group": "1_format@3"
+        },
+        {
+          "command": "markdown.formatUnderline",
+          "when": "editorLangId == markdown",
+          "group": "1_format@4"
+        },
+        {
+          "command": "markdown.formatInlineCode",
+          "when": "editorLangId == markdown",
+          "group": "1_format@5"
+        },
+        {
+          "command": "markdown.formatCodeBlock",
+          "when": "editorLangId == markdown",
+          "group": "1_format@6"
+        },
+        {
+          "command": "markdown.formatBulletedList",
+          "when": "editorLangId == markdown",
+          "group": "2_lists@1"
+        },
+        {
+          "command": "markdown.formatNumberedList",
+          "when": "editorLangId == markdown",
+          "group": "2_lists@2"
+        },
+        {
+          "command": "markdown.formatQuoteBlock",
+          "when": "editorLangId == markdown",
+          "group": "2_lists@3"
+        },
+        {
+          "submenu": "markdown.heading",
+          "when": "editorLangId == markdown",
+          "group": "3_heading@1"
+        }
+      ],
+      "markdown.heading": [
+        {
+          "command": "markdown.formatHeading1",
+          "when": "editorLangId == markdown",
+          "group": "1_heading@1"
+        },
+        {
+          "command": "markdown.formatHeading2",
+          "when": "editorLangId == markdown",
+          "group": "1_heading@2"
+        },
+        {
+          "command": "markdown.formatHeading3",
+          "when": "editorLangId == markdown",
+          "group": "1_heading@3"
+        },
+        {
+          "command": "markdown.formatHeading4",
+          "when": "editorLangId == markdown",
+          "group": "1_heading@4"
+        },
+        {
+          "command": "markdown.formatHeading5",
+          "when": "editorLangId == markdown",
+          "group": "1_heading@5"
+        },
+        {
+          "command": "markdown.formatHeading6",
+          "when": "editorLangId == markdown",
+          "group": "1_heading@6"
         }
       ]
     },
@@ -94,6 +347,7 @@
     "@types/mocha": "^2.2.42",
     "@types/node": "^10.14.4",
     "@types/vscode": "^1.31.0",
+    "fast-check": "^4.3.0",
     "tslint": "^5.14.0",
     "typescript": "^5.9.3"
   },
