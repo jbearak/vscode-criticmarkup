@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as changes from './changes';
 import * as formatting from './formatting';
+import * as author from './author';
 import { criticmarkupPlugin } from './preview/criticmarkup-plugin';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -8,6 +9,39 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand('criticmarkup.nextChange', () => changes.next()),
 		vscode.commands.registerCommand('criticmarkup.prevChange', () => changes.prev())
+	);
+
+	// Debug command to show available author name sources
+	context.subscriptions.push(
+		vscode.commands.registerCommand('criticmarkup.debugAuthorName', () => {
+			const results: string[] = [];
+			
+			// Check settings
+			const config = vscode.workspace.getConfiguration('criticmarkup');
+			const disableAuthorNames = config.get<boolean>('disableAuthorNames', false);
+			const authorNameSetting = config.get<string>('authorName', '');
+			
+			results.push(`Setting - disableAuthorNames: ${disableAuthorNames}`);
+			results.push(`Setting - authorName: ${authorNameSetting || '(not set)'}`);
+			
+			// Check OS username
+			const os = require('os');
+			try {
+				const userInfo = os.userInfo();
+				results.push(`OS username: ${userInfo.username}`);
+			} catch (error) {
+				results.push(`OS username: Error - ${error}`);
+			}
+			
+			// Show what getAuthorName() would return
+			const authorName = author.getAuthorName();
+			results.push(`\ngetAuthorName() returns: ${authorName || '(null)'}`);
+			
+			vscode.window.showInformationMessage(
+				'Author Name Sources:\n\n' + results.join('\n'),
+				{ modal: true }
+			);
+		})
 	);
 
 	// Register CriticMarkup annotation commands
@@ -24,21 +58,26 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('criticmarkup.highlight', () => 
 			applyFormatting((text) => formatting.wrapSelection(text, '{==', '==}'))
 		),
-		vscode.commands.registerCommand('criticmarkup.insertComment', () => 
-			applyFormatting((text) => formatting.wrapSelection(text, '{>>', '<<}', 3))
-		),
-		vscode.commands.registerCommand('criticmarkup.highlightAndComment', () => 
-			applyFormatting((text) => formatting.highlightAndComment(text))
-		),
-		vscode.commands.registerCommand('criticmarkup.substituteAndComment', () => 
-			applyFormatting((text) => formatting.substituteAndComment(text))
-		),
-		vscode.commands.registerCommand('criticmarkup.additionAndComment', () => 
-			applyFormatting((text) => formatting.additionAndComment(text))
-		),
-		vscode.commands.registerCommand('criticmarkup.deletionAndComment', () => 
-			applyFormatting((text) => formatting.deletionAndComment(text))
-		)
+		vscode.commands.registerCommand('criticmarkup.insertComment', () => {
+			const authorName = author.getAuthorName();
+			applyFormatting((text) => formatting.wrapSelection(text, '{>>', '<<}', 3, authorName));
+		}),
+		vscode.commands.registerCommand('criticmarkup.highlightAndComment', () => {
+			const authorName = author.getAuthorName();
+			applyFormatting((text) => formatting.highlightAndComment(text, authorName));
+		}),
+		vscode.commands.registerCommand('criticmarkup.substituteAndComment', () => {
+			const authorName = author.getAuthorName();
+			applyFormatting((text) => formatting.substituteAndComment(text, authorName));
+		}),
+		vscode.commands.registerCommand('criticmarkup.additionAndComment', () => {
+			const authorName = author.getAuthorName();
+			applyFormatting((text) => formatting.additionAndComment(text, authorName));
+		}),
+		vscode.commands.registerCommand('criticmarkup.deletionAndComment', () => {
+			const authorName = author.getAuthorName();
+			applyFormatting((text) => formatting.deletionAndComment(text, authorName));
+		})
 	);
 
 	// Register Markdown formatting commands

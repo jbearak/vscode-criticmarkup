@@ -9,18 +9,32 @@ export interface TextTransformation {
  * @param prefix - The prefix delimiter
  * @param suffix - The suffix delimiter
  * @param cursorOffset - Optional cursor position relative to start of newText
+ * @param authorName - Optional author name to include in comments
  * @returns TextTransformation with wrapped text and optional cursor offset
  */
 export function wrapSelection(
   text: string,
   prefix: string,
   suffix: string,
-  cursorOffset?: number
+  cursorOffset?: number,
+  authorName?: string | null
 ): TextTransformation {
-  const newText = prefix + text + suffix;
+  let newText = prefix + text + suffix;
+  let adjustedCursorOffset = cursorOffset;
+  
+  // If this is a comment (prefix is '{>>') and we have an author name, insert it
+  if (prefix === '{>>' && authorName) {
+    const authorPrefix = `@${authorName}: `;
+    newText = prefix + authorPrefix + text + suffix;
+    // Adjust cursor offset to account for author prefix length
+    if (adjustedCursorOffset !== undefined) {
+      adjustedCursorOffset = adjustedCursorOffset + authorPrefix.length;
+    }
+  }
+  
   return {
     newText,
-    cursorOffset
+    cursorOffset: adjustedCursorOffset
   };
 }
 
@@ -106,12 +120,14 @@ export function formatHeading(text: string, level: number): TextTransformation {
 /**
  * Wraps text with highlight and appends a comment placeholder
  * @param text - The text to highlight
+ * @param authorName - Optional author name to include in comment
  * @returns TextTransformation with highlight and comment, cursor positioned in comment
  */
-export function highlightAndComment(text: string): TextTransformation {
+export function highlightAndComment(text: string, authorName?: string | null): TextTransformation {
   const highlighted = `{==${text}==}`;
-  const withComment = highlighted + '{>><<}';
-  const cursorOffset = highlighted.length + 3; // Position between >> and <<
+  const authorPrefix = authorName ? `@${authorName}: ` : '';
+  const withComment = highlighted + `{>>${authorPrefix}<<}`;
+  const cursorOffset = highlighted.length + 3 + authorPrefix.length; // Position after author prefix
   
   return {
     newText: withComment,
@@ -142,12 +158,14 @@ export function formatBoldItalic(text: string): TextTransformation {
 /**
  * Wraps text with substitution markup and appends a comment placeholder
  * @param text - The text to substitute
+ * @param authorName - Optional author name to include in comment
  * @returns TextTransformation with substitution and comment, cursor positioned in comment
  */
-export function substituteAndComment(text: string): TextTransformation {
+export function substituteAndComment(text: string, authorName?: string | null): TextTransformation {
   const substitution = `{~~${text}~>~~}`;
-  const withComment = substitution + '{>><<}';
-  const cursorOffset = substitution.length + 3; // Position between >> and <<
+  const authorPrefix = authorName ? `@${authorName}: ` : '';
+  const withComment = substitution + `{>>${authorPrefix}<<}`;
+  const cursorOffset = substitution.length + 3 + authorPrefix.length; // Position after author prefix
   
   return {
     newText: withComment,
@@ -158,12 +176,14 @@ export function substituteAndComment(text: string): TextTransformation {
 /**
  * Wraps text with addition markup and appends a comment placeholder
  * @param text - The text to mark as addition
+ * @param authorName - Optional author name to include in comment
  * @returns TextTransformation with addition and comment, cursor positioned in comment
  */
-export function additionAndComment(text: string): TextTransformation {
+export function additionAndComment(text: string, authorName?: string | null): TextTransformation {
   const addition = `{++${text}++}`;
-  const withComment = addition + '{>><<}';
-  const cursorOffset = addition.length + 3; // Position between >> and <<
+  const authorPrefix = authorName ? `@${authorName}: ` : '';
+  const withComment = addition + `{>>${authorPrefix}<<}`;
+  const cursorOffset = addition.length + 3 + authorPrefix.length; // Position after author prefix
   
   return {
     newText: withComment,
@@ -174,12 +194,14 @@ export function additionAndComment(text: string): TextTransformation {
 /**
  * Wraps text with deletion markup and appends a comment placeholder
  * @param text - The text to mark as deletion
+ * @param authorName - Optional author name to include in comment
  * @returns TextTransformation with deletion and comment, cursor positioned in comment
  */
-export function deletionAndComment(text: string): TextTransformation {
+export function deletionAndComment(text: string, authorName?: string | null): TextTransformation {
   const deletion = `{--${text}--}`;
-  const withComment = deletion + '{>><<}';
-  const cursorOffset = deletion.length + 3; // Position between >> and <<
+  const authorPrefix = authorName ? `@${authorName}: ` : '';
+  const withComment = deletion + `{>>${authorPrefix}<<}`;
+  const cursorOffset = deletion.length + 3 + authorPrefix.length; // Position after author prefix
   
   return {
     newText: withComment,

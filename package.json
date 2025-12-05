@@ -138,6 +138,10 @@
       {
         "command": "markdown.formatHeading6",
         "title": "Heading 6"
+      },
+      {
+        "command": "criticmarkup.debugAuthorName",
+        "title": "CriticMarkup: Debug Author Name"
       }
     ],
     "submenus": [
@@ -341,7 +345,22 @@
     "markdown.previewStyles": [
       "./media/criticmarkup.css"
     ],
-    "markdown.markdownItPlugins": true
+    "markdown.markdownItPlugins": true,
+    "configuration": {
+      "title": "CriticMarkup",
+      "properties": {
+        "criticmarkup.disableAuthorNames": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable automatic author names in comments"
+        },
+        "criticmarkup.authorName": {
+          "type": "string",
+          "default": "",
+          "description": "Author name to use in comments (leave empty to use OS username)"
+        }
+      }
+    }
   },
   "scripts": {
     "compile": "tsc -p ./",

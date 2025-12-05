@@ -402,6 +402,182 @@ describe('Formatting Module Property Tests', () => {
       );
     });
   });
+
+  // Feature: author-name-in-comments, Property 1: Comment format with author name
+  // Validates: Requirements 1.2
+  describe('Property 1: Comment format with author name', () => {
+    it('should format comment with author name in the format {>>@Username: <<} and position cursor correctly', () => {
+      fc.assert(
+        fc.property(fc.string({ minLength: 1 }), (username) => {
+          const result = wrapSelection('', '{>>', '<<}', 3, username);
+          
+          // Expected format: {>>@Username: <<}
+          const expectedText = `{>>@${username}: <<}`;
+          const structureCorrect = result.newText === expectedText;
+          
+          // Cursor should be positioned after "@Username: " (after the colon and space)
+          const expectedCursorPos = 3 + username.length + 3; // 3 for '{>>', username length, 3 for '@', ':', ' '
+          const cursorCorrect = result.cursorOffset === expectedCursorPos;
+          
+          return structureCorrect && cursorCorrect;
+        }),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  // Feature: author-name-in-comments, Property 2: Highlight-and-comment format with author name
+  // Validates: Requirements 1.4
+  describe('Property 2: Highlight-and-comment format with author name', () => {
+    it('should format highlight-and-comment with author name in the format {==text==}{>>@Username: <<} and position cursor correctly', () => {
+      fc.assert(
+        fc.property(fc.string(), fc.string({ minLength: 1 }), (text, username) => {
+          const result = highlightAndComment(text, username);
+          
+          // Expected format: {==text==}{>>@Username: <<}
+          const expectedText = `{==${text}==}{>>@${username}: <<}`;
+          const structureCorrect = result.newText === expectedText;
+          
+          // Cursor should be positioned after "@Username: " in the comment section
+          const highlightLength = `{==${text}==}`.length;
+          const expectedCursorPos = highlightLength + 3 + username.length + 3; // highlight + '{>>' + '@' + username + ': '
+          const cursorCorrect = result.cursorOffset === expectedCursorPos;
+          
+          return structureCorrect && cursorCorrect;
+        }),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  // Feature: author-name-in-comments, Property 4: Special characters preservation
+  // Validates: Requirements 3.3
+  describe('Property 4: Special characters preservation', () => {
+    it('should preserve special characters in username without modification or escaping', () => {
+      fc.assert(
+        fc.property(
+          fc.oneof(
+            // Generate usernames with various special characters
+            fc.string({ minLength: 1 }).map(s => s + '@'),
+            fc.string({ minLength: 1 }).map(s => s + ':'),
+            fc.string({ minLength: 1 }).map(s => s + '{'),
+            fc.string({ minLength: 1 }).map(s => s + '}'),
+            fc.string({ minLength: 1 }).map(s => s + '<'),
+            fc.string({ minLength: 1 }).map(s => s + '>'),
+            fc.string({ minLength: 1 }).map(s => s + ' '),
+            fc.string({ minLength: 1 }).map(s => s + '🎉'), // Unicode emoji
+            fc.string({ minLength: 1 }).map(s => s + 'é'), // Unicode accented character
+            fc.string({ minLength: 1 }) // Regular strings
+          ),
+          (username) => {
+            const result = wrapSelection('', '{>>', '<<}', 3, username);
+            
+            // The username should appear exactly as provided in the output
+            const expectedText = `{>>@${username}: <<}`;
+            const structureCorrect = result.newText === expectedText;
+            
+            // Verify the username is not escaped or modified
+            const extractedUsername = result.newText.slice(4, 4 + username.length);
+            const usernamePreserved = extractedUsername === username;
+            
+            return structureCorrect && usernamePreserved;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
+});
+
+describe('Formatting Module Unit Tests - Author Name Edge Cases', () => {
+  // Test comment insertion with null author name
+  it('should insert comment without author prefix when author name is null', () => {
+    const result = wrapSelection('', '{>>', '<<}', 3, null);
+    const expected = '{>><<}';
+    
+    if (result.newText !== expected) {
+      throw new Error(`Expected "${expected}" but got "${result.newText}"`);
+    }
+    if (result.cursorOffset !== 3) {
+      throw new Error(`Expected cursor offset 3 but got ${result.cursorOffset}`);
+    }
+  });
+
+  // Test comment insertion with undefined author name
+  it('should insert comment without author prefix when author name is undefined', () => {
+    const result = wrapSelection('', '{>>', '<<}', 3, undefined);
+    const expected = '{>><<}';
+    
+    if (result.newText !== expected) {
+      throw new Error(`Expected "${expected}" but got "${result.newText}"`);
+    }
+    if (result.cursorOffset !== 3) {
+      throw new Error(`Expected cursor offset 3 but got ${result.cursorOffset}`);
+    }
+  });
+
+  // Test highlight-and-comment with empty selection
+  it('should handle highlight-and-comment with empty selection', () => {
+    const result = highlightAndComment('', 'TestUser');
+    const expected = '{====}{>>@TestUser: <<}';
+    
+    if (result.newText !== expected) {
+      throw new Error(`Expected "${expected}" but got "${result.newText}"`);
+    }
+    
+    // Cursor should be after the author prefix in the comment
+    const expectedCursorPos = '{====}{>>@TestUser: '.length;
+    if (result.cursorOffset !== expectedCursorPos) {
+      throw new Error(`Expected cursor offset ${expectedCursorPos} but got ${result.cursorOffset}`);
+    }
+  });
+
+  // Test cursor positioning with author name
+  it('should position cursor correctly with author name', () => {
+    const result = wrapSelection('', '{>>', '<<}', 3, 'Alice');
+    const expected = '{>>@Alice: <<}';
+    
+    if (result.newText !== expected) {
+      throw new Error(`Expected "${expected}" but got "${result.newText}"`);
+    }
+    
+    // Cursor should be after "@Alice: "
+    const expectedCursorPos = '{>>@Alice: '.length;
+    if (result.cursorOffset !== expectedCursorPos) {
+      throw new Error(`Expected cursor offset ${expectedCursorPos} but got ${result.cursorOffset}`);
+    }
+  });
+
+  // Test cursor positioning without author name
+  it('should position cursor correctly without author name', () => {
+    const result = wrapSelection('', '{>>', '<<}', 3, null);
+    const expected = '{>><<}';
+    
+    if (result.newText !== expected) {
+      throw new Error(`Expected "${expected}" but got "${result.newText}"`);
+    }
+    
+    // Cursor should be between >> and <<
+    if (result.cursorOffset !== 3) {
+      throw new Error(`Expected cursor offset 3 but got ${result.cursorOffset}`);
+    }
+  });
+
+  // Test highlight-and-comment without author name
+  it('should handle highlight-and-comment without author name', () => {
+    const result = highlightAndComment('test text', null);
+    const expected = '{==test text==}{>><<}';
+    
+    if (result.newText !== expected) {
+      throw new Error(`Expected "${expected}" but got "${result.newText}"`);
+    }
+    
+    // Cursor should be between >> and <<
+    const expectedCursorPos = '{==test text==}{>>'.length;
+    if (result.cursorOffset !== expectedCursorPos) {
+      throw new Error(`Expected cursor offset ${expectedCursorPos} but got ${result.cursorOffset}`);
+    }
+  });
 });
         
   
