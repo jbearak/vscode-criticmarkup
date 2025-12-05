@@ -367,25 +367,35 @@ describe('Formatting Module Property Tests', () => {
     });
   });
 
-  // Feature: markdown-context-menu, Property 9: Heading level prefix
-  // Validates: Requirements 2.8
-  describe('Property 9: Heading level prefix', () => {
-    it('should prepend exactly N # characters followed by a space for heading level N', () => {
+  // Feature: markdown-context-menu, Property 9: Heading level replacement
+  // Validates: Requirements 2.9
+  describe('Property 9: Heading level replacement', () => {
+    it('should remove existing heading indicators and prepend exactly N # characters followed by a space for heading level N', () => {
       fc.assert(
         fc.property(
           fc.string(),
           fc.integer({ min: 1, max: 6 }),
-          (text, level) => {
-            const result = formatHeading(text, level);
-            const expectedPrefix = '#'.repeat(level) + ' ';
+          fc.integer({ min: 0, max: 6 }), // existing heading level (0 means no heading)
+          (baseText, newLevel, existingLevel) => {
+            // Create text with or without existing heading
+            const text = existingLevel > 0 
+              ? '#'.repeat(existingLevel) + ' ' + baseText 
+              : baseText;
+            
+            const result = formatHeading(text, newLevel);
+            const expectedPrefix = '#'.repeat(newLevel) + ' ';
             
             // Check that result starts with correct number of # followed by space
             const hasCorrectPrefix = result.newText.startsWith(expectedPrefix);
             
-            // Check that the original text follows the prefix
-            const hasCorrectContent = result.newText.slice(expectedPrefix.length) === text;
+            // Check that the base text (without any heading indicators) follows the prefix
+            const hasCorrectContent = result.newText.slice(expectedPrefix.length) === baseText;
             
-            return hasCorrectPrefix && hasCorrectContent;
+            // Ensure no double heading indicators
+            const afterPrefix = result.newText.slice(expectedPrefix.length);
+            const noDoubleHeading = !afterPrefix.match(/^#+\s/);
+            
+            return hasCorrectPrefix && hasCorrectContent && noDoubleHeading;
           }
         ),
         { numRuns: 100 }

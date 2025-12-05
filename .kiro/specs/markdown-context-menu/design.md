@@ -170,9 +170,9 @@ Property 8: Multi-paragraph line independence
 *For any* text containing multiple paragraphs separated by blank lines, applying line-based formatting should transform each non-empty line independently without affecting blank lines
 **Validates: Requirements 6.4**
 
-Property 9: Heading level prefix
-*For any* text line and any heading level N (1-6), applying heading N formatting should prepend exactly N `#` characters followed by a space to the beginning of the line
-**Validates: Requirements 2.8**
+Property 9: Heading level replacement
+*For any* text line and any heading level N (1-6), applying heading N formatting should first remove any existing heading indicators (one or more `#` characters followed by a space) from the beginning of the line, then place exactly N `#` characters followed by a space at the beginning of the line
+**Validates: Requirements 2.9**
 
 ### Unit Testing
 

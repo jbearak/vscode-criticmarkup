@@ -5,8 +5,8 @@
   - Implement `wrapSelection()` function for wrapping text with prefix/suffix delimiters
   - Implement `wrapLines()` function for prepending text to each line
   - Implement `wrapLinesNumbered()` function for numbered list formatting
-  - Implement `formatHeading()` function for heading level formatting
-  - _Requirements: 1.2, 1.3, 1.5, 2.2, 2.3, 2.4, 2.5, 2.6, 3.2, 3.3, 4.2, 4.3, 2.8_
+  - Implement `formatHeading()` function that removes existing heading indicators and places new ones at the beginning of the line
+  - _Requirements: 1.2, 1.3, 1.5, 2.2, 2.3, 2.4, 2.5, 2.6, 3.2, 3.3, 4.2, 4.3, 2.9_
 
 - [x] 1.1 Write property test for text wrapping
   - **Property 1: Text wrapping preserves content**
@@ -41,8 +41,8 @@
   - **Validates: Requirements 6.4**
 
 - [x] 1.9 Write property test for heading formatting
-  - **Property 9: Heading level prefix**
-  - **Validates: Requirements 2.8**
+  - **Property 9: Heading level replacement**
+  - **Validates: Requirements 2.9**
 
 - [x] 2. Implement command handlers in extension.ts
   - Register all CriticMarkup annotation commands (addition, deletion, substitution, highlight, comment, highlight+comment)
@@ -50,7 +50,7 @@
   - Register all heading level commands (H1-H6)
   - Each handler should get the active editor, extract selections, call formatting functions, and apply edits
   - Handle cursor positioning for commands that need it (substitution, comment, highlight+comment)
-  - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.2, 2.3, 2.4, 2.5, 2.6, 3.2, 3.3, 4.2, 2.8_
+  - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.2, 2.3, 2.4, 2.5, 2.6, 3.2, 3.3, 4.2, 2.9_
 
 - [x] 2.1 Write unit tests for command handlers
   - Test empty selection handling
@@ -69,9 +69,15 @@
 - [x] 4. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 5. Manual testing and edge case verification
+- [x] 5. Fix formatHeading to remove existing heading indicators
+  - Update `formatHeading()` function in `src/formatting.ts` to remove any existing heading indicators (one or more `#` characters followed by a space) from the beginning of the line before adding new heading prefix
+  - Ensure the existing property test (Property 9) validates this behavior
+  - _Requirements: 2.9_
+
+- [ ] 6. Manual testing and edge case verification
   - Test all commands with various text selections in Markdown files
   - Verify menus only appear in Markdown documents
   - Test edge cases: empty selections, multi-line selections, text with existing formatting
   - Verify cursor positioning for interactive commands
+  - Test heading commands on text that already has heading indicators
   - _Requirements: 5.1, 5.2, 6.1, 6.2, 6.3, 6.4_

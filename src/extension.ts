@@ -72,25 +72,25 @@ export function activate(context: vscode.ExtensionContext) {
 		)
 	);
 
-	// Register heading commands
+	// Register heading commands (use line-based formatting)
 	context.subscriptions.push(
 		vscode.commands.registerCommand('markdown.formatHeading1', () => 
-			applyFormatting((text) => formatting.formatHeading(text, 1))
+			applyLineBasedFormatting((text) => formatting.formatHeading(text, 1))
 		),
 		vscode.commands.registerCommand('markdown.formatHeading2', () => 
-			applyFormatting((text) => formatting.formatHeading(text, 2))
+			applyLineBasedFormatting((text) => formatting.formatHeading(text, 2))
 		),
 		vscode.commands.registerCommand('markdown.formatHeading3', () => 
-			applyFormatting((text) => formatting.formatHeading(text, 3))
+			applyLineBasedFormatting((text) => formatting.formatHeading(text, 3))
 		),
 		vscode.commands.registerCommand('markdown.formatHeading4', () => 
-			applyFormatting((text) => formatting.formatHeading(text, 4))
+			applyLineBasedFormatting((text) => formatting.formatHeading(text, 4))
 		),
 		vscode.commands.registerCommand('markdown.formatHeading5', () => 
-			applyFormatting((text) => formatting.formatHeading(text, 5))
+			applyLineBasedFormatting((text) => formatting.formatHeading(text, 5))
 		),
 		vscode.commands.registerCommand('markdown.formatHeading6', () => 
-			applyFormatting((text) => formatting.formatHeading(text, 6))
+			applyLineBasedFormatting((text) => formatting.formatHeading(text, 6))
 		)
 	);
 
@@ -147,6 +147,35 @@ function applyFormatting(formatter: (text: string) => formatting.TextTransformat
 			})) {
 				editor.selections = newSelections;
 			}
+		}
+	});
+}
+
+/**
+ * Helper function to apply line-based formatting to the current selection(s)
+ * Expands selections to include full lines before applying formatting
+ * @param formatter - Function that takes text and returns a TextTransformation
+ */
+function applyLineBasedFormatting(formatter: (text: string) => formatting.TextTransformation): void {
+	const editor = vscode.window.activeTextEditor;
+	if (!editor) {
+		return;
+	}
+
+	editor.edit(editBuilder => {
+		// Process each selection (supports multi-cursor)
+		for (const selection of editor.selections) {
+			// Expand selection to include full lines
+			const startLine = selection.start.line;
+			const endLine = selection.end.line;
+			const fullLineRange = new vscode.Range(
+				editor.document.lineAt(startLine).range.start,
+				editor.document.lineAt(endLine).range.end
+			);
+			
+			const text = editor.document.getText(fullLineRange);
+			const transformation = formatter(text);
+			editBuilder.replace(fullLineRange, transformation.newText);
 		}
 	});
 }

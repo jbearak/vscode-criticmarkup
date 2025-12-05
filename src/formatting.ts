@@ -81,14 +81,24 @@ export function wrapLinesNumbered(text: string): TextTransformation {
 
 /**
  * Formats text as a heading with the specified level
- * @param text - The text to format
+ * Removes any existing heading indicators before adding new ones
+ * Works on each line independently for multi-line text
+ * @param text - The text to format (can be multi-line)
  * @param level - The heading level (1-6)
  * @returns TextTransformation with heading prefix
  */
 export function formatHeading(text: string, level: number): TextTransformation {
+  const lines = text.split('\n');
   const prefix = '#'.repeat(level) + ' ';
+  
+  const processedLines = lines.map(line => {
+    // Remove any existing heading indicators (one or more # followed by a space)
+    const lineWithoutHeading = line.replace(/^#+\s/, '');
+    return prefix + lineWithoutHeading;
+  });
+  
   return {
-    newText: prefix + text
+    newText: processedLines.join('\n')
   };
 }
 

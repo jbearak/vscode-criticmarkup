@@ -45,7 +45,7 @@ This feature adds a context menu (right-click menu) to the CriticMarkup VS Code 
 6. WHEN a user selects the "Inline Code" option, THEN the system SHALL wrap the selected text with `` ` `` delimiters on both sides
 7. WHEN a user selects the "Code Block" option, THEN the system SHALL wrap the selected text with ``` ``` ``` delimiters on separate lines above and below the selection
 8. WHEN a user opens the "Heading" submenu, THEN the system SHALL display options for Heading 1 through Heading 6
-9. WHEN a user selects a heading level option, THEN the system SHALL prepend the appropriate number of `#` characters followed by a space to the selected line or current line
+9. WHEN a user selects a heading level option, THEN the system SHALL remove any existing heading indicators from the beginning of the line and place the appropriate number of `#` characters followed by a space at the beginning of the line
 
 ### Requirement 3
 
