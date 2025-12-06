@@ -16,7 +16,7 @@ bun run compile
 
 In the Extension Development Host window:
 - Open `test-multiline-manual.md`
-- This file contains all test cases for multi-line CriticMarkup patterns
+- This file contains all test cases for multi-line mdmarkup patterns
 
 ### 3. Test Syntax Highlighting
 
@@ -36,14 +36,14 @@ Simply observe the document:
 
 **Next Change Command:**
 - Default keybinding: `Cmd+Shift+.` (Mac) or `Ctrl+Shift+.` (Windows/Linux)
-- Or: Open Command Palette (Cmd+Shift+P / Ctrl+Shift+P) and type "CriticMarkup: Next Change"
+- Or: Open Command Palette (Cmd+Shift+P / Ctrl+Shift+P) and type "mdmarkup: Next Change"
 
 **Previous Change Command:**
 - Default keybinding: `Cmd+Shift+,` (Mac) or `Ctrl+Shift+,` (Windows/Linux)
-- Or: Open Command Palette and type "CriticMarkup: Previous Change"
+- Or: Open Command Palette and type "mdmarkup: Previous Change"
 
 **What to verify:**
-- Cursor moves to the next/previous CriticMarkup pattern
+- Cursor moves to the next/previous mdmarkup pattern
 - The entire pattern is selected (from opening to closing marker)
 - Multi-line patterns are fully selected across all lines
 - Navigation wraps from last to first (and vice versa)
@@ -102,7 +102,7 @@ Use the test document sections:
 ## Debugging Tips
 
 ### If syntax highlighting doesn't work:
-1. Check that the extension is activated (look for CriticMarkup commands in Command Palette)
+1. Check that the extension is activated (look for mdmarkup commands in Command Palette)
 2. Verify the file is recognized as Markdown (check language mode in bottom-right)
 3. Try reloading the Extension Development Host window
 4. Check Developer Tools console for errors (Help > Toggle Developer Tools)

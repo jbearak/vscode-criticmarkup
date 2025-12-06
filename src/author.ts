@@ -5,21 +5,21 @@ import * as os from 'os';
  * Retrieves the author name for comment attribution
  * Returns null if disabled or unavailable
  * Always returns synchronously - never blocks
- * 
+ *
  * Priority order:
- * 1. Check criticmarkup.disableAuthorNames - if true, return null
- * 2. Check criticmarkup.authorName - if set, return this value
+ * 1. Check mdmarkup.includeAuthorNameInComments - if false, return null
+ * 2. Check mdmarkup.authorName - if set, return this value
  * 3. Fallback to OS username from os.userInfo()
  * 4. Return null if all methods fail
  */
 export function getAuthorName(): string | null {
 	try {
 		// Get configuration
-		const config = vscode.workspace.getConfiguration('criticmarkup');
+		const config = vscode.workspace.getConfiguration('mdmarkup');
 		
-		// Priority 1: Check disable setting
-		const disableAuthorNames = config.get<boolean>('disableAuthorNames', false);
-		if (disableAuthorNames) {
+		// Priority 1: Check include setting
+		const includeAuthorName = config.get<boolean>('includeAuthorNameInComments', true);
+		if (!includeAuthorName) {
 			return null;
 		}
 		
@@ -59,7 +59,7 @@ export function getFormattedAuthorName(): string | null {
 	}
 	
 	try {
-		const config = vscode.workspace.getConfiguration('criticmarkup');
+		const config = vscode.workspace.getConfiguration('mdmarkup');
 		const includeTimestamp = config.get<boolean>('includeTimestampInComments', true);
 		
 		if (!includeTimestamp) {

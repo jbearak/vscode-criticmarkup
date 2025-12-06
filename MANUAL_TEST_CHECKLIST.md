@@ -1,4 +1,4 @@
-# Manual Testing Checklist for Multi-line CriticMarkup Support
+# Manual Testing Checklist for Multi-line mdmarkup Support
 
 ## Prerequisites
 - [ ] Extension compiled successfully (`bun run compile`)
@@ -43,7 +43,7 @@ Verify in Test 6 section:
 Starting from the top of the document:
 
 1. [ ] Place cursor at line 1 (before any patterns)
-2. [ ] Execute command: `CriticMarkup: Next Change` (default: Cmd+Shift+. on Mac, Ctrl+Shift+. on Windows/Linux)
+2. [ ] Execute command: `mdmarkup: Next Change` (default: Cmd+Shift+. on Mac, Ctrl+Shift+. on Windows/Linux)
 3. [ ] Verify: Cursor moves to Test 1 addition and entire pattern is selected
 4. [ ] Execute `Next Change` again
 5. [ ] Verify: Cursor moves to Test 2 deletion and entire pattern is selected
@@ -59,7 +59,7 @@ Starting from the top of the document:
 Starting from the bottom of the document:
 
 1. [ ] Place cursor at the end of the document
-2. [ ] Execute command: `CriticMarkup: Previous Change` (default: Cmd+Shift+, on Mac, Ctrl+Shift+, on Windows/Linux)
+2. [ ] Execute command: `mdmarkup: Previous Change` (default: Cmd+Shift+, on Mac, Ctrl+Shift+, on Windows/Linux)
 3. [ ] Verify: Cursor moves to Test 15 addition and entire pattern is selected
 4. [ ] Execute `Previous Change` again
 5. [ ] Verify: Cursor moves backward through patterns

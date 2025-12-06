@@ -1,12 +1,12 @@
-# Design Document: Markdown Preview CriticMarkup Highlighting
+# Design Document: Markdown Preview mdmarkup Highlighting
 
 ## Overview
 
-This feature extends the VS Code CriticMarkup extension to render CriticMarkup syntax with visual styling in the Markdown Preview pane. The implementation uses VS Code's Markdown Preview extensibility API to register a markdown-it plugin that parses CriticMarkup syntax and transforms it into styled HTML elements.
+This feature extends the VS Code mdmarkup extension to render mdmarkup syntax with visual styling in the Markdown Preview pane. The implementation uses VS Code's Markdown Preview extensibility API to register a markdown-it plugin that parses mdmarkup syntax and transforms it into styled HTML elements.
 
 The solution consists of three main components:
-1. A markdown-it plugin that parses CriticMarkup patterns and generates HTML with CSS classes
-2. A CSS stylesheet that defines visual styling for CriticMarkup elements
+1. A markdown-it plugin that parses mdmarkup patterns and generates HTML with CSS classes
+2. A CSS stylesheet that defines visual styling for mdmarkup elements
 3. Extension activation code that registers the plugin and stylesheet with VS Code's Markdown Preview
 
 ## Architecture
@@ -24,14 +24,14 @@ The solution consists of three main components:
 │  └────────────────┬───────────────────────────────────┘ │
 │                   │                                      │
 │  ┌────────────────▼───────────────────────────────────┐ │
-│  │    Markdown-it Plugin (criticmarkup-plugin.ts)     │ │
-│  │  - Parses CriticMarkup patterns                    │ │
+│  │    Markdown-it Plugin (mdmarkup-plugin.ts)     │ │
+│  │  - Parses mdmarkup patterns                    │ │
 │  │  - Generates HTML with CSS classes                 │ │
 │  └────────────────────────────────────────────────────┘ │
 │                                                          │
 │  ┌────────────────────────────────────────────────────┐ │
-│  │      Preview Stylesheet (criticmarkup.css)         │ │
-│  │  - Defines visual styling for CriticMarkup         │ │
+│  │      Preview Stylesheet (mdmarkup.css)         │ │
+│  │  - Defines visual styling for mdmarkup         │ │
 │  └────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────┘
                             │
@@ -45,11 +45,11 @@ The solution consists of three main components:
 
 ### Component Interaction Flow
 
-1. User opens a Markdown file with CriticMarkup syntax
+1. User opens a Markdown file with mdmarkup syntax
 2. User opens the Markdown Preview
 3. VS Code's Markdown Preview engine loads registered plugins
-4. The CriticMarkup plugin processes the document:
-   - Scans for CriticMarkup patterns using regex
+4. The mdmarkup plugin processes the document:
+   - Scans for mdmarkup patterns using regex
    - Replaces patterns with HTML elements containing CSS classes
    - Preserves nested Markdown for further processing
 5. Standard markdown-it processing continues on the transformed content
@@ -58,103 +58,103 @@ The solution consists of three main components:
 
 ## Components and Interfaces
 
-### 1. Markdown-it Plugin (`src/preview/criticmarkup-plugin.ts`)
+### 1. Markdown-it Plugin (`src/preview/mdmarkup-plugin.ts`)
 
-The plugin implements the markdown-it plugin interface and processes CriticMarkup syntax.
+The plugin implements the markdown-it plugin interface and processes mdmarkup syntax.
 
 ```typescript
 import MarkdownIt from 'markdown-it';
 
-interface CriticMarkupPattern {
+interface mdmarkupPattern {
   name: string;
   regex: RegExp;
   cssClass: string;
   htmlTag: string;
 }
 
-export function criticmarkupPlugin(md: MarkdownIt): void {
+export function mdmarkupPlugin(md: MarkdownIt): void {
   // Plugin implementation
 }
 ```
 
 **Key Functions:**
 
-- `criticmarkupPlugin(md: MarkdownIt)`: Main plugin function that registers the rule with markdown-it
-- `parseCriticMarkup(state: StateInline, silent: boolean)`: Inline rule that detects and transforms CriticMarkup patterns
-- `renderCriticMarkup(tokens: Token[], idx: number, options: any, env: any, self: Renderer)`: Renders CriticMarkup tokens as HTML
+- `mdmarkupPlugin(md: MarkdownIt)`: Main plugin function that registers the rule with markdown-it
+- `parsemdmarkup(state: StateInline, silent: boolean)`: Inline rule that detects and transforms mdmarkup patterns
+- `rendermdmarkup(tokens: Token[], idx: number, options: any, env: any, self: Renderer)`: Renders mdmarkup tokens as HTML
 
 **Pattern Definitions:**
 
 ```typescript
-const patterns: CriticMarkupPattern[] = [
-  { name: 'addition', regex: /\{\+\+(.+?)\+\+\}/gs, cssClass: 'criticmarkup-addition', htmlTag: 'ins' },
-  { name: 'deletion', regex: /\{--(.+?)--\}/gs, cssClass: 'criticmarkup-deletion', htmlTag: 'del' },
-  { name: 'substitution', regex: /\{~~(.+?)~>(.+?)~~\}/gs, cssClass: 'criticmarkup-substitution', htmlTag: 'span' },
-  { name: 'comment', regex: /\{>>(.+?)<<\}/gs, cssClass: 'criticmarkup-comment', htmlTag: 'span' },
-  { name: 'highlight', regex: /\{==(.+?)==\}/gs, cssClass: 'criticmarkup-highlight', htmlTag: 'mark' }
+const patterns: mdmarkupPattern[] = [
+  { name: 'addition', regex: /\{\+\+(.+?)\+\+\}/gs, cssClass: 'mdmarkup-addition', htmlTag: 'ins' },
+  { name: 'deletion', regex: /\{--(.+?)--\}/gs, cssClass: 'mdmarkup-deletion', htmlTag: 'del' },
+  { name: 'substitution', regex: /\{~~(.+?)~>(.+?)~~\}/gs, cssClass: 'mdmarkup-substitution', htmlTag: 'span' },
+  { name: 'comment', regex: /\{>>(.+?)<<\}/gs, cssClass: 'mdmarkup-comment', htmlTag: 'span' },
+  { name: 'highlight', regex: /\{==(.+?)==\}/gs, cssClass: 'mdmarkup-highlight', htmlTag: 'mark' }
 ];
 ```
 
-### 2. Preview Stylesheet (`media/criticmarkup.css`)
+### 2. Preview Stylesheet (`media/mdmarkup.css`)
 
-CSS file that defines theme-aware visual styling for CriticMarkup elements in the preview.
+CSS file that defines theme-aware visual styling for mdmarkup elements in the preview.
 
 ```css
 /* Default (Light Theme) Colors */
 :root {
-  --criticmarkup-addition-color: #008800;
-  --criticmarkup-addition-bg: rgba(0, 136, 0, 0.1);
-  --criticmarkup-deletion-color: #cc0000;
-  --criticmarkup-deletion-bg: rgba(204, 0, 0, 0.1);
-  --criticmarkup-substitution-color: #dd6600;
-  --criticmarkup-substitution-bg: rgba(221, 102, 0, 0.1);
-  --criticmarkup-comment-color: #0066cc;
-  --criticmarkup-comment-bg: rgba(0, 102, 204, 0.1);
-  --criticmarkup-highlight-color: #9933aa;
-  --criticmarkup-highlight-bg: rgba(153, 51, 170, 0.15);
+  --mdmarkup-addition-color: #008800;
+  --mdmarkup-addition-bg: rgba(0, 136, 0, 0.1);
+  --mdmarkup-deletion-color: #cc0000;
+  --mdmarkup-deletion-bg: rgba(204, 0, 0, 0.1);
+  --mdmarkup-substitution-color: #dd6600;
+  --mdmarkup-substitution-bg: rgba(221, 102, 0, 0.1);
+  --mdmarkup-comment-color: #0066cc;
+  --mdmarkup-comment-bg: rgba(0, 102, 204, 0.1);
+  --mdmarkup-highlight-color: #9933aa;
+  --mdmarkup-highlight-bg: rgba(153, 51, 170, 0.15);
 }
 
 /* Dark Theme Colors */
 @media (prefers-color-scheme: dark) {
   :root {
-    --criticmarkup-addition-color: #00dd00;
-    --criticmarkup-addition-bg: rgba(0, 221, 0, 0.15);
-    --criticmarkup-deletion-color: #ff4444;
-    --criticmarkup-deletion-bg: rgba(255, 68, 68, 0.15);
-    --criticmarkup-substitution-color: #ff9944;
-    --criticmarkup-substitution-bg: rgba(255, 153, 68, 0.15);
-    --criticmarkup-comment-color: #5599ff;
-    --criticmarkup-comment-bg: rgba(85, 153, 255, 0.15);
-    --criticmarkup-highlight-color: #cc66dd;
-    --criticmarkup-highlight-bg: rgba(204, 102, 221, 0.2);
+    --mdmarkup-addition-color: #00dd00;
+    --mdmarkup-addition-bg: rgba(0, 221, 0, 0.15);
+    --mdmarkup-deletion-color: #ff4444;
+    --mdmarkup-deletion-bg: rgba(255, 68, 68, 0.15);
+    --mdmarkup-substitution-color: #ff9944;
+    --mdmarkup-substitution-bg: rgba(255, 153, 68, 0.15);
+    --mdmarkup-comment-color: #5599ff;
+    --mdmarkup-comment-bg: rgba(85, 153, 255, 0.15);
+    --mdmarkup-highlight-color: #cc66dd;
+    --mdmarkup-highlight-bg: rgba(204, 102, 221, 0.2);
   }
 }
 
-.criticmarkup-addition {
-  color: var(--criticmarkup-addition-color);
-  background-color: var(--criticmarkup-addition-bg);
+.mdmarkup-addition {
+  color: var(--mdmarkup-addition-color);
+  background-color: var(--mdmarkup-addition-bg);
 }
 
-.criticmarkup-deletion {
-  color: var(--criticmarkup-deletion-color);
-  background-color: var(--criticmarkup-deletion-bg);
+.mdmarkup-deletion {
+  color: var(--mdmarkup-deletion-color);
+  background-color: var(--mdmarkup-deletion-bg);
   text-decoration: line-through;
 }
 
-.criticmarkup-substitution {
-  color: var(--criticmarkup-substitution-color);
-  background-color: var(--criticmarkup-substitution-bg);
+.mdmarkup-substitution {
+  color: var(--mdmarkup-substitution-color);
+  background-color: var(--mdmarkup-substitution-bg);
 }
 
-.criticmarkup-comment {
-  color: var(--criticmarkup-comment-color);
-  background-color: var(--criticmarkup-comment-bg);
+.mdmarkup-comment {
+  color: var(--mdmarkup-comment-color);
+  background-color: var(--mdmarkup-comment-bg);
   font-style: italic;
 }
 
-.criticmarkup-highlight {
-  color: var(--criticmarkup-highlight-color);
-  background-color: var(--criticmarkup-highlight-bg);
+.mdmarkup-highlight {
+  color: var(--mdmarkup-highlight-color);
+  background-color: var(--mdmarkup-highlight-bg);
 }
 ```
 
@@ -168,7 +168,7 @@ export function activate(context: vscode.ExtensionContext) {
   
   return {
     extendMarkdownIt(md: any) {
-      return md.use(criticmarkupPlugin);
+      return md.use(mdmarkupPlugin);
     }
   };
 }
@@ -180,7 +180,7 @@ The `package.json` will be updated to declare the preview stylesheet:
 {
   "contributes": {
     "markdown.previewStyles": [
-      "./media/criticmarkup.css"
+      "./media/mdmarkup.css"
     ]
   }
 }
@@ -188,10 +188,10 @@ The `package.json` will be updated to declare the preview stylesheet:
 
 ## Data Models
 
-### CriticMarkup Pattern Model
+### mdmarkup Pattern Model
 
 ```typescript
-interface CriticMarkupPattern {
+interface mdmarkupPattern {
   name: string;           // Pattern identifier (e.g., 'addition', 'deletion')
   regex: RegExp;          // Regular expression to match the pattern
   cssClass: string;       // CSS class to apply to rendered HTML
@@ -217,27 +217,27 @@ Correctness Properties
 
 After analyzing the acceptance criteria, several properties can be consolidated to avoid redundancy. The following properties capture the essential correctness requirements:
 
-### Property 1: CriticMarkup pattern transformation
+### Property 1: mdmarkup pattern transformation
 
-*For any* CriticMarkup pattern type (addition, deletion, substitution, comment, highlight) and any text content, when the markdown-it plugin processes the markup, the output HTML should contain an element with the corresponding CSS class.
+*For any* mdmarkup pattern type (addition, deletion, substitution, comment, highlight) and any text content, when the markdown-it plugin processes the markup, the output HTML should contain an element with the corresponding CSS class.
 
 **Validates: Requirements 1.1, 2.1, 3.1, 4.1, 5.1**
 
 ### Property 2: Multiple instance consistency
 
-*For any* CriticMarkup pattern type and any number of instances in a document, when the plugin processes the document, each instance should be rendered with the same HTML structure and CSS class.
+*For any* mdmarkup pattern type and any number of instances in a document, when the plugin processes the document, each instance should be rendered with the same HTML structure and CSS class.
 
 **Validates: Requirements 1.2, 2.2, 3.2, 4.2, 5.2**
 
 ### Property 3: Multiline content preservation
 
-*For any* CriticMarkup pattern type and any text content containing line breaks, when the plugin processes the markup, the output HTML should preserve all line breaks within the styled element.
+*For any* mdmarkup pattern type and any text content containing line breaks, when the plugin processes the markup, the output HTML should preserve all line breaks within the styled element.
 
 **Validates: Requirements 1.3, 2.3, 3.3, 4.3, 5.3**
 
 ### Property 4: Nested Markdown rendering
 
-*For any* CriticMarkup pattern type and any text content containing Markdown syntax (bold, italic, links, etc.), when the plugin processes the markup, the output HTML should contain both the CriticMarkup styling and the rendered Markdown formatting.
+*For any* mdmarkup pattern type and any text content containing Markdown syntax (bold, italic, links, etc.), when the plugin processes the markup, the output HTML should contain both the mdmarkup styling and the rendered Markdown formatting.
 
 **Validates: Requirements 1.4, 2.4, 3.4, 4.4, 5.4, 8.1**
 
@@ -249,13 +249,13 @@ After analyzing the acceptance criteria, several properties can be consolidated 
 
 ### Property 6: List structure preservation
 
-*For any* Markdown list (ordered or unordered) containing CriticMarkup in list items, when the plugin processes the document, the output HTML should preserve the list structure and apply CriticMarkup styling to the marked content.
+*For any* Markdown list (ordered or unordered) containing mdmarkup in list items, when the plugin processes the document, the output HTML should preserve the list structure and apply mdmarkup styling to the marked content.
 
 **Validates: Requirements 8.2**
 
 ### Property 7: Theme-aware color adaptation
 
-*For any* CriticMarkup element type, the CSS should define different color values for light and dark themes using media queries, ensuring readability in both contexts.
+*For any* mdmarkup element type, the CSS should define different color values for light and dark themes using media queries, ensuring readability in both contexts.
 
 **Validates: Requirements 6.1, 6.2, 6.4, 6.5**
 
@@ -263,17 +263,17 @@ After analyzing the acceptance criteria, several properties can be consolidated 
 
 ### Invalid or Malformed Markup
 
-The plugin should handle malformed CriticMarkup gracefully:
+The plugin should handle malformed mdmarkup gracefully:
 
-- **Unclosed patterns**: If a CriticMarkup pattern is not properly closed (e.g., `{++text` without `++}`), the plugin should treat it as literal text and not attempt transformation
+- **Unclosed patterns**: If a mdmarkup pattern is not properly closed (e.g., `{++text` without `++}`), the plugin should treat it as literal text and not attempt transformation
 - **Nested same-type patterns**: If the same pattern type is nested (e.g., `{++outer {++inner++} outer++}`), the plugin should process the outermost pattern first
-- **Empty patterns**: Empty CriticMarkup patterns (e.g., `{++++}`) should be rendered as empty styled elements
+- **Empty patterns**: Empty mdmarkup patterns (e.g., `{++++}`) should be rendered as empty styled elements
 
 ### Edge Cases
 
-- **Code blocks and inline code**: CriticMarkup syntax within Markdown code blocks (` ``` `) and inline code (`` ` ``) should be treated as literal text and not processed. This is handled by markdown-it's parsing order, which processes code blocks before inline rules.
-- **Escaped characters**: If CriticMarkup delimiters are escaped in Markdown, they should be treated as literal text
-- **Very long content**: The plugin should handle CriticMarkup patterns containing large amounts of text without performance degradation
+- **Code blocks and inline code**: mdmarkup syntax within Markdown code blocks (` ``` `) and inline code (`` ` ``) should be treated as literal text and not processed. This is handled by markdown-it's parsing order, which processes code blocks before inline rules.
+- **Escaped characters**: If mdmarkup delimiters are escaped in Markdown, they should be treated as literal text
+- **Very long content**: The plugin should handle mdmarkup patterns containing large amounts of text without performance degradation
 
 ## Testing Strategy
 
@@ -281,11 +281,11 @@ The plugin should handle malformed CriticMarkup gracefully:
 
 Unit tests will verify specific behaviors and edge cases:
 
-- **Pattern matching**: Test that each CriticMarkup pattern regex correctly matches valid syntax
+- **Pattern matching**: Test that each mdmarkup pattern regex correctly matches valid syntax
 - **HTML generation**: Test that the plugin generates correct HTML structure for each pattern type
 - **CSS class application**: Test that the correct CSS classes are applied to generated HTML
 - **Edge cases**: Test handling of empty patterns, unclosed patterns, and escaped delimiters
-- **Code block exclusion**: Test that CriticMarkup in code blocks is not processed
+- **Code block exclusion**: Test that mdmarkup in code blocks is not processed
 
 ### Property-Based Testing
 
@@ -294,13 +294,13 @@ Property-based tests will verify universal properties across many randomly gener
 - Each property-based test should run a minimum of 100 iterations
 - Each test must be tagged with a comment referencing the correctness property from this design document
 - Tag format: `// Feature: markdown-preview-highlighting, Property {number}: {property_text}`
-- Tests will generate random text content, CriticMarkup patterns, and Markdown syntax combinations
-- Generators should be smart about creating valid CriticMarkup syntax and avoiding patterns that would be excluded (e.g., inside code blocks)
+- Tests will generate random text content, mdmarkup patterns, and Markdown syntax combinations
+- Generators should be smart about creating valid mdmarkup syntax and avoiding patterns that would be excluded (e.g., inside code blocks)
 
 **Test Organization:**
 
-- Property tests: `src/preview/criticmarkup-plugin.test.ts`
-- Unit tests: `src/preview/criticmarkup-plugin.test.ts` (same file, different test suites)
+- Property tests: `src/preview/mdmarkup-plugin.test.ts`
+- Unit tests: `src/preview/mdmarkup-plugin.test.ts` (same file, different test suites)
 
 ### Integration Testing
 
@@ -308,7 +308,7 @@ Integration tests will verify the plugin works correctly with VS Code's Markdown
 
 - Test that the plugin is correctly registered with markdown-it
 - Test that the CSS stylesheet is loaded in the preview
-- Test end-to-end rendering of a Markdown document with CriticMarkup
+- Test end-to-end rendering of a Markdown document with mdmarkup
 
 ## Implementation Notes
 
@@ -317,17 +317,17 @@ Integration tests will verify the plugin works correctly with VS Code's Markdown
 The plugin will use markdown-it's inline rule system:
 
 1. Register an inline rule that runs before standard Markdown processing
-2. The rule scans for CriticMarkup patterns using regex
-3. When a pattern is found, create custom tokens for the CriticMarkup content
+2. The rule scans for mdmarkup patterns using regex
+3. When a pattern is found, create custom tokens for the mdmarkup content
 4. Register a renderer for the custom tokens that generates HTML with CSS classes
 
 ### Pattern Processing Order
 
 To handle nested Markdown correctly, the plugin must:
 
-1. Parse CriticMarkup patterns first, creating tokens
-2. Allow markdown-it to process the content inside CriticMarkup tokens
-3. Render the final HTML with both CriticMarkup styling and Markdown formatting
+1. Parse mdmarkup patterns first, creating tokens
+2. Allow markdown-it to process the content inside mdmarkup tokens
+3. Render the final HTML with both mdmarkup styling and Markdown formatting
 
 ### CSS Styling Approach
 
@@ -360,6 +360,6 @@ VS Code's Markdown preview automatically includes the `vscode-body` class and re
 Potential future improvements not included in this initial implementation:
 
 - Configuration option to customize preview colors independently from editor colors
-- Toggle to show/hide CriticMarkup in preview (accept/reject mode)
+- Toggle to show/hide mdmarkup in preview (accept/reject mode)
 - Preview-specific rendering modes (e.g., "final" mode showing only accepted changes)
-- Support for CriticMarkup metadata attributes
+- Support for mdmarkup metadata attributes

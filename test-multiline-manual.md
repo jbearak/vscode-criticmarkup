@@ -1,6 +1,6 @@
-# Multi-line CriticMarkup Manual Test Document
+# Multi-line mdmarkup Manual Test Document
 
-This document contains various multi-line CriticMarkup patterns for manual testing.
+This document contains various multi-line mdmarkup patterns for manual testing.
 
 ## Test 1: Multi-line Addition
 

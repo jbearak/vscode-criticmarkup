@@ -1,0 +1,63 @@
+/* mdmarkup Preview Styles - Theme Aware */
+
+/* Default (Light Theme) Colors */
+:root {
+  --mdmarkup-addition-color: #008800;
+  --mdmarkup-addition-bg: rgba(0, 136, 0, 0.1);
+  --mdmarkup-deletion-color: #cc0000;
+  --mdmarkup-deletion-bg: rgba(204, 0, 0, 0.1);
+  --mdmarkup-substitution-color: #dd6600;
+  --mdmarkup-substitution-bg: rgba(221, 102, 0, 0.1);
+  --mdmarkup-comment-color: #0066cc;
+  --mdmarkup-comment-bg: rgba(0, 102, 204, 0.1);
+  --mdmarkup-highlight-color: #9933aa;
+  --mdmarkup-highlight-bg: rgba(153, 51, 170, 0.15);
+}
+
+/* Dark Theme Colors */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mdmarkup-addition-color: #00dd00;
+    --mdmarkup-addition-bg: rgba(0, 221, 0, 0.15);
+    --mdmarkup-deletion-color: #ff4444;
+    --mdmarkup-deletion-bg: rgba(255, 68, 68, 0.15);
+    --mdmarkup-substitution-color: #ff9944;
+    --mdmarkup-substitution-bg: rgba(255, 153, 68, 0.15);
+    --mdmarkup-comment-color: #5599ff;
+    --mdmarkup-comment-bg: rgba(85, 153, 255, 0.15);
+    --mdmarkup-highlight-color: #cc66dd;
+    --mdmarkup-highlight-bg: rgba(204, 102, 221, 0.2);
+  }
+}
+
+/* Addition - green with semi-transparent background */
+.mdmarkup-addition {
+  color: var(--mdmarkup-addition-color);
+  background-color: var(--mdmarkup-addition-bg);
+}
+
+/* Deletion - red with semi-transparent background and strikethrough */
+.mdmarkup-deletion {
+  color: var(--mdmarkup-deletion-color);
+  background-color: var(--mdmarkup-deletion-bg);
+  text-decoration: line-through;
+}
+
+/* Substitution - orange with semi-transparent background */
+.mdmarkup-substitution {
+  color: var(--mdmarkup-substitution-color);
+  background-color: var(--mdmarkup-substitution-bg);
+}
+
+/* Comment - blue with semi-transparent background and italic */
+.mdmarkup-comment {
+  color: var(--mdmarkup-comment-color);
+  background-color: var(--mdmarkup-comment-bg);
+  font-style: italic;
+}
+
+/* Highlight - purple with semi-transparent background */
+.mdmarkup-highlight {
+  color: var(--mdmarkup-highlight-color);
+  background-color: var(--mdmarkup-highlight-bg);
+}

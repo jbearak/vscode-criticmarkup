@@ -11,7 +11,7 @@
 		"addition": {
 			"begin": "\\{\\+\\+",
 			"end": "\\+\\+\\}",
-			"name": "markup.inserted.criticmarkup",
+			"name": "markup.inserted.mdmarkup",
 			"contentName": "markup.inserted",
 			"patterns": [
 				{
@@ -23,7 +23,7 @@
 		"deletion": {
 			"begin": "\\{--",
 			"end": "--\\}",
-			"name": "markup.deleted.criticmarkup",
+			"name": "markup.deleted.mdmarkup",
 			"contentName": "markup.deleted",
 			"patterns": [
 				{
@@ -35,7 +35,7 @@
 		"substitution": {
 			"begin": "\\{\\~\\~",
 			"end": "\\~\\~\\}",
-			"name": "markup.changed.criticmarkup",
+			"name": "markup.changed.mdmarkup",
 			"contentName": "markup.changed",
 			"patterns": [
 				{
@@ -47,7 +47,7 @@
 		"comment": {
 			"begin": "\\{>>",
 			"end": "<<\\}",
-			"name": "entity.name.function.criticmarkup",
+			"name": "entity.name.function.mdmarkup",
 			"contentName": "entity.name.function",
 			"patterns": [
 				{
@@ -59,7 +59,7 @@
 		"highlight": {
 			"begin": "\\{==",
 			"end": "==\\}",
-			"name": "markup.bold.criticmarkup",
+			"name": "markup.bold.mdmarkup",
 			"contentName": "markup.bold",
 			"patterns": [
 				{
@@ -69,5 +69,5 @@
 			]
 		}
 	},
-    "scopeName": "criticmarkup.injection"
+    "scopeName": "mdmarkup.injection"
 }

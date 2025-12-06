@@ -8,7 +8,7 @@ All automated tests have passed successfully (204 tests). The extension is ready
 
 ### 1. Test Document: `test-multiline-manual.md`
 A comprehensive test document containing:
-- 15 test sections covering all CriticMarkup pattern types
+- 15 test sections covering all mdmarkup pattern types
 - Multi-line patterns with various line counts
 - Patterns with empty lines (critical test case)
 - Edge cases: empty patterns, whitespace-only, very long patterns
@@ -123,7 +123,7 @@ These are the most important scenarios to verify:
 Based on the design document, these are expected limitations:
 
 1. **Nested patterns**: Outer pattern takes precedence
-2. **Unclosed patterns**: Will not be highlighted or rendered as CriticMarkup
+2. **Unclosed patterns**: Will not be highlighted or rendered as mdmarkup
 3. **Malformed substitutions**: Missing `~>` separator will not render correctly
 
 These are by design and should not be considered bugs.
@@ -153,7 +153,7 @@ After completing manual testing:
 1. **If all tests pass**:
    - Mark task 5 as complete
    - Consider moving to task 6 (documentation updates)
-   - The multi-line CriticMarkup support feature is complete!
+   - The multi-line mdmarkup support feature is complete!
 
 2. **If issues are found**:
    - Document them clearly
@@ -169,7 +169,7 @@ For reference, these aspects are already covered by automated tests:
 - ✅ Preview rendering (Property 3)
 - ✅ Empty line preservation (Property 4)
 - ✅ Edge cases (empty patterns, whitespace, very long patterns)
-- ✅ All five CriticMarkup pattern types
+- ✅ All five mdmarkup pattern types
 
 Manual testing focuses on:
 - Visual verification of syntax highlighting
@@ -183,5 +183,5 @@ Manual testing focuses on:
 If you have questions during testing:
 - Check `MANUAL_TEST_GUIDE.md` for detailed instructions
 - Check `MANUAL_TEST_CHECKLIST.md` for specific test cases
-- Review the design document at `.kiro/specs/multiline-criticmarkup-support/design.md`
+- Review the design document at `.kiro/specs/multiline-mdmarkup-support/design.md`
 - Check the Developer Tools console for errors

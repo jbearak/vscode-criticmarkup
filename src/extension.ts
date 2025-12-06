@@ -2,26 +2,26 @@ import * as vscode from 'vscode';
 import * as changes from './changes';
 import * as formatting from './formatting';
 import * as author from './author';
-import { criticmarkupPlugin } from './preview/criticmarkup-plugin';
+import { mdmarkupPlugin } from './preview/mdmarkup-plugin';
 
 export function activate(context: vscode.ExtensionContext) {
 	// Register existing navigation commands
 	context.subscriptions.push(
-		vscode.commands.registerCommand('criticmarkup.nextChange', () => changes.next()),
-		vscode.commands.registerCommand('criticmarkup.prevChange', () => changes.prev())
+		vscode.commands.registerCommand('mdmarkup.nextChange', () => changes.next()),
+		vscode.commands.registerCommand('mdmarkup.prevChange', () => changes.prev())
 	);
 
 	// Debug command to show available author name sources
 	context.subscriptions.push(
-		vscode.commands.registerCommand('criticmarkup.debugAuthorName', () => {
+		vscode.commands.registerCommand('mdmarkup.debugAuthorName', () => {
 			const results: string[] = [];
 			
 			// Check settings
-			const config = vscode.workspace.getConfiguration('criticmarkup');
-			const disableAuthorNames = config.get<boolean>('disableAuthorNames', false);
+			const config = vscode.workspace.getConfiguration('mdmarkup');
+			const includeAuthorName = config.get<boolean>('includeAuthorNameInComments', true);
 			const authorNameSetting = config.get<string>('authorName', '');
 			
-			results.push(`Setting - disableAuthorNames: ${disableAuthorNames}`);
+			results.push(`Setting - includeAuthorNameInComments: ${includeAuthorName}`);
 			results.push(`Setting - authorName: ${authorNameSetting || '(not set)'}`);
 			
 			// Check OS username
@@ -46,35 +46,35 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Register CriticMarkup annotation commands
 	context.subscriptions.push(
-		vscode.commands.registerCommand('criticmarkup.markAddition', () => 
+		vscode.commands.registerCommand('mdmarkup.markAddition', () => 
 			applyFormatting((text) => formatting.wrapSelection(text, '{++', '++}'))
 		),
-		vscode.commands.registerCommand('criticmarkup.markDeletion', () => 
+		vscode.commands.registerCommand('mdmarkup.markDeletion', () => 
 			applyFormatting((text) => formatting.wrapSelection(text, '{--', '--}'))
 		),
-		vscode.commands.registerCommand('criticmarkup.markSubstitution', () => 
+		vscode.commands.registerCommand('mdmarkup.markSubstitution', () => 
 			applyFormatting((text) => formatting.wrapSelection(text, '{~~', '~>~~}', text.length + 4))
 		),
-		vscode.commands.registerCommand('criticmarkup.highlight', () => 
+		vscode.commands.registerCommand('mdmarkup.highlight', () => 
 			applyFormatting((text) => formatting.wrapSelection(text, '{==', '==}'))
 		),
-		vscode.commands.registerCommand('criticmarkup.insertComment', () => {
+		vscode.commands.registerCommand('mdmarkup.insertComment', () => {
 			const authorName = author.getFormattedAuthorName();
 			applyFormatting((text) => formatting.wrapSelection(text, '{>>', '<<}', 3, authorName));
 		}),
-		vscode.commands.registerCommand('criticmarkup.highlightAndComment', () => {
+		vscode.commands.registerCommand('mdmarkup.highlightAndComment', () => {
 			const authorName = author.getFormattedAuthorName();
 			applyFormatting((text) => formatting.highlightAndComment(text, authorName));
 		}),
-		vscode.commands.registerCommand('criticmarkup.substituteAndComment', () => {
+		vscode.commands.registerCommand('mdmarkup.substituteAndComment', () => {
 			const authorName = author.getFormattedAuthorName();
 			applyFormatting((text) => formatting.substituteAndComment(text, authorName));
 		}),
-		vscode.commands.registerCommand('criticmarkup.additionAndComment', () => {
+		vscode.commands.registerCommand('mdmarkup.additionAndComment', () => {
 			const authorName = author.getFormattedAuthorName();
 			applyFormatting((text) => formatting.additionAndComment(text, authorName));
 		}),
-		vscode.commands.registerCommand('criticmarkup.deletionAndComment', () => {
+		vscode.commands.registerCommand('mdmarkup.deletionAndComment', () => {
 			const authorName = author.getFormattedAuthorName();
 			applyFormatting((text) => formatting.deletionAndComment(text, authorName));
 		})
@@ -152,7 +152,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// Return markdown-it plugin for preview integration
 	return {
 		extendMarkdownIt(md: any) {
-			return md.use(criticmarkupPlugin);
+			return md.use(mdmarkupPlugin);
 		}
 	};
 }

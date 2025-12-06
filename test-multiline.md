@@ -1,4 +1,4 @@
-# Multi-line CriticMarkup Test
+# Multi-line mdmarkup Test
 
 This is a test to see if multi-line markup works:
 

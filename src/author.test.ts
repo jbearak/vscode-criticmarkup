@@ -11,16 +11,16 @@ describe('Author Name Retrieval Property Tests', () => {
           fc.string({ minLength: 1 }).filter(s => s.trim() !== ''),
           (overrideValue) => {
             // Simulate the logic from getAuthorName() for override precedence
-            // When disableAuthorNames is false and authorNameOverride is set,
+            // When includeAuthorNameInComments is true and authorNameOverride is set,
             // the function should return the override value
             
-            const disableAuthorNames = false;
+            const includeAuthorName = true;
             const authorNameOverride = overrideValue;
             
             // This is the logic we're testing from author.ts
             let result: string | null = null;
             
-            if (disableAuthorNames) {
+            if (!includeAuthorName) {
               result = null;
             } else if (authorNameOverride && authorNameOverride.trim() !== '') {
               result = authorNameOverride;
@@ -40,13 +40,13 @@ describe('Author Name Retrieval Property Tests', () => {
           fc.string({ minLength: 1 }).filter(s => s.trim() !== ''),
           (overrideValue) => {
             // Simulate the logic from getAuthorName() for disable precedence
-            const disableAuthorNames = true;
+            const includeAuthorName = false;
             const authorNameOverride = overrideValue;
             
             // This is the logic we're testing from author.ts
             let result: string | null = null;
             
-            if (disableAuthorNames) {
+            if (!includeAuthorName) {
               result = null;
             } else if (authorNameOverride && authorNameOverride.trim() !== '') {
               result = authorNameOverride;
@@ -71,13 +71,13 @@ describe('Author Name Retrieval Property Tests', () => {
           ),
           (emptyOrWhitespace) => {
             // Simulate the logic from getAuthorName()
-            const disableAuthorNames = false;
+            const includeAuthorName = true;
             const authorNameOverride = emptyOrWhitespace;
             
             // This is the logic we're testing from author.ts
             let result: string | null = null;
             
-            if (disableAuthorNames) {
+            if (!includeAuthorName) {
               result = null;
             } else if (authorNameOverride && authorNameOverride.trim() !== '') {
               result = authorNameOverride;
@@ -98,14 +98,14 @@ describe('Author Name Retrieval Property Tests', () => {
 describe('Author Name Retrieval Unit Tests', () => {
   // Test disable setting returns null
   describe('Disable setting behavior', () => {
-    it('should return null when disableAuthorNames is true', () => {
-      const disableAuthorNames = true;
+    it('should return null when includeAuthorNameInComments is false', () => {
+      const includeAuthorName = false;
       const authorNameOverride = 'TestUser';
       
       // Simulate the logic
       let result: string | null = null;
       
-      if (disableAuthorNames) {
+      if (!includeAuthorName) {
         result = null;
       } else if (authorNameOverride && authorNameOverride.trim() !== '') {
         result = authorNameOverride;
@@ -115,13 +115,13 @@ describe('Author Name Retrieval Unit Tests', () => {
     });
 
     it('should return null when disabled even with Git username available', () => {
-      const disableAuthorNames = true;
+      const includeAuthorName = false;
       const gitUsername = 'GitUser';
       
       // Simulate the logic
       let result: string | null = null;
       
-      if (disableAuthorNames) {
+      if (!includeAuthorName) {
         result = null;
       } else {
         // Would check Git API here
@@ -135,13 +135,13 @@ describe('Author Name Retrieval Unit Tests', () => {
   // Test override setting returns override value
   describe('Override setting behavior', () => {
     it('should return override value when set', () => {
-      const disableAuthorNames = false;
+      const includeAuthorName = true;
       const authorNameOverride = 'OverrideUser';
       
       // Simulate the logic
       let result: string | null = null;
       
-      if (disableAuthorNames) {
+      if (!includeAuthorName) {
         result = null;
       } else if (authorNameOverride && authorNameOverride.trim() !== '') {
         result = authorNameOverride;
@@ -151,13 +151,13 @@ describe('Author Name Retrieval Unit Tests', () => {
     });
 
     it('should handle override with special characters', () => {
-      const disableAuthorNames = false;
+      const includeAuthorName = true;
       const authorNameOverride = '@User:Name{Test}';
       
       // Simulate the logic
       let result: string | null = null;
       
-      if (disableAuthorNames) {
+      if (!includeAuthorName) {
         result = null;
       } else if (authorNameOverride && authorNameOverride.trim() !== '') {
         result = authorNameOverride;
@@ -170,14 +170,14 @@ describe('Author Name Retrieval Unit Tests', () => {
   // Test Git API fallback when no settings configured
   describe('Git API fallback', () => {
     it('should use Git username when no settings are configured', () => {
-      const disableAuthorNames = false;
+      const includeAuthorName = true;
       const authorNameOverride = '';
       const gitUsername = 'GitUser';
       
       // Simulate the logic
       let result: string | null = null;
       
-      if (disableAuthorNames) {
+      if (!includeAuthorName) {
         result = null;
       } else if (authorNameOverride && authorNameOverride.trim() !== '') {
         result = authorNameOverride;
@@ -190,14 +190,14 @@ describe('Author Name Retrieval Unit Tests', () => {
     });
 
     it('should return null when Git username is empty', () => {
-      const disableAuthorNames = false;
+      const includeAuthorName = true;
       const authorNameOverride = '';
       const gitUsername = '';
       
       // Simulate the logic
       let result: string | null = null;
       
-      if (disableAuthorNames) {
+      if (!includeAuthorName) {
         result = null;
       } else if (authorNameOverride && authorNameOverride.trim() !== '') {
         result = authorNameOverride;
@@ -215,13 +215,13 @@ describe('Author Name Retrieval Unit Tests', () => {
   // Test settings precedence (disable > override > Git API)
   describe('Settings precedence', () => {
     it('should prioritize disable over override', () => {
-      const disableAuthorNames = true;
+      const includeAuthorName = false;
       const authorNameOverride = 'OverrideUser';
       
       // Simulate the logic
       let result: string | null = null;
       
-      if (disableAuthorNames) {
+      if (!includeAuthorName) {
         result = null;
       } else if (authorNameOverride && authorNameOverride.trim() !== '') {
         result = authorNameOverride;
@@ -231,14 +231,14 @@ describe('Author Name Retrieval Unit Tests', () => {
     });
 
     it('should prioritize disable over Git API', () => {
-      const disableAuthorNames = true;
+      const includeAuthorName = false;
       const authorNameOverride = '';
       const gitUsername = 'GitUser';
       
       // Simulate the logic
       let result: string | null = null;
       
-      if (disableAuthorNames) {
+      if (!includeAuthorName) {
         result = null;
       } else if (authorNameOverride && authorNameOverride.trim() !== '') {
         result = authorNameOverride;
@@ -250,14 +250,14 @@ describe('Author Name Retrieval Unit Tests', () => {
     });
 
     it('should prioritize override over Git API', () => {
-      const disableAuthorNames = false;
+      const includeAuthorName = true;
       const authorNameOverride = 'OverrideUser';
       const gitUsername = 'GitUser';
       
       // Simulate the logic
       let result: string | null = null;
       
-      if (disableAuthorNames) {
+      if (!includeAuthorName) {
         result = null;
       } else if (authorNameOverride && authorNameOverride.trim() !== '') {
         result = authorNameOverride;
@@ -272,14 +272,14 @@ describe('Author Name Retrieval Unit Tests', () => {
   // Test graceful fallback when Git extension unavailable
   describe('Graceful fallback', () => {
     it('should return null when Git extension is unavailable', () => {
-      const disableAuthorNames = false;
+      const includeAuthorName = true;
       const authorNameOverride = '';
       const gitExtensionAvailable = false;
       
       // Simulate the logic
       let result: string | null = null;
       
-      if (disableAuthorNames) {
+      if (!includeAuthorName) {
         result = null;
       } else if (authorNameOverride && authorNameOverride.trim() !== '') {
         result = authorNameOverride;
@@ -292,14 +292,14 @@ describe('Author Name Retrieval Unit Tests', () => {
     });
 
     it('should return null when Git API throws error', () => {
-      const disableAuthorNames = false;
+      const includeAuthorName = true;
       const authorNameOverride = '';
       
       // Simulate the logic with error handling
       let result: string | null = null;
       
       try {
-        if (disableAuthorNames) {
+        if (!includeAuthorName) {
           result = null;
         } else if (authorNameOverride && authorNameOverride.trim() !== '') {
           result = authorNameOverride;

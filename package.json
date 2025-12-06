@@ -1,8 +1,8 @@
 {
-  "name": "vscode-criticmarkup",
-  "displayName": "CriticMarkup for Visual Studio Code",
-  "description": "A CriticMarkup extension for Visual Studio Code.",
-  "version": "0.3.0",
+  "name": "mdmarkup",
+  "displayName": "Markdown Annotations and Formatting",
+  "description": "Markdown formatting and CriticMarkup annotations tools",
+  "version": "0.9.0",
   "engines": {
     "vscode": "^1.31.0"
   },
@@ -13,70 +13,73 @@
   ],
   "keywords": [
     "markdown",
-    "criticmarkup",
-    "critic markup"
+    "mdmarkup",
+    "critic markup",
+    "annotations",
+    "formatting",
+    "markdown formatting"
   ],
   "publisher": "jbearak",
   "license": "SEE LICENSE IN LICENSE.txt",
   "bugs": {
-    "url": "https://github.com/jbearak/vscode-criticmarkup/issues"
+    "url": "https://github.com/jbearak/mdmarkup/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jbearak/vscode-criticmarkup.git"
+    "url": "https://github.com/jbearak/mdmarkup.git"
   },
   "activationEvents": [
     "onLanguage:markdown",
-    "onCommand:criticmarkup.nextChange",
-    "onCommand:criticmarkup.prevChange"
+    "onCommand:mdmarkup.nextChange",
+    "onCommand:mdmarkup.prevChange"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "criticmarkup.nextChange",
+        "command": "mdmarkup.nextChange",
         "title": "Next Change",
         "icon": "$(chevron-down)"
       },
       {
-        "command": "criticmarkup.prevChange",
+        "command": "mdmarkup.prevChange",
         "title": "Previous Change",
         "icon": "$(chevron-up)"
       },
       {
-        "command": "criticmarkup.markAddition",
+        "command": "mdmarkup.markAddition",
         "title": "Mark as Addition"
       },
       {
-        "command": "criticmarkup.markDeletion",
+        "command": "mdmarkup.markDeletion",
         "title": "Mark as Deletion"
       },
       {
-        "command": "criticmarkup.markSubstitution",
+        "command": "mdmarkup.markSubstitution",
         "title": "Substitution"
       },
       {
-        "command": "criticmarkup.highlight",
+        "command": "mdmarkup.highlight",
         "title": "Highlight"
       },
       {
-        "command": "criticmarkup.insertComment",
+        "command": "mdmarkup.insertComment",
         "title": "Comment"
       },
       {
-        "command": "criticmarkup.highlightAndComment",
+        "command": "mdmarkup.highlightAndComment",
         "title": "Comment and highlight"
       },
       {
-        "command": "criticmarkup.substituteAndComment",
+        "command": "mdmarkup.substituteAndComment",
         "title": "Comment and substitution"
       },
       {
-        "command": "criticmarkup.additionAndComment",
+        "command": "mdmarkup.additionAndComment",
         "title": "Comment and mark as addition"
       },
       {
-        "command": "criticmarkup.deletionAndComment",
+        "command": "mdmarkup.deletionAndComment",
         "title": "Comment and mark as deletion"
       },
       {
@@ -156,8 +159,8 @@
         "title": "Reflow Table"
       },
       {
-        "command": "criticmarkup.debugAuthorName",
-        "title": "CriticMarkup: Debug Author Name"
+        "command": "mdmarkup.debugAuthorName",
+        "title": "mdmarkup: Debug Author Name"
       }
     ],
     "submenus": [
@@ -203,52 +206,52 @@
       ],
       "markdown.annotations": [
         {
-          "command": "criticmarkup.highlightAndComment",
+          "command": "mdmarkup.highlightAndComment",
           "when": "editorLangId == markdown",
-          "group": "1_criticmarkup@1"
+          "group": "1_mdmarkup@1"
         },
         {
-          "command": "criticmarkup.additionAndComment",
+          "command": "mdmarkup.additionAndComment",
           "when": "editorLangId == markdown",
-          "group": "1_criticmarkup@2"
+          "group": "1_mdmarkup@2"
         },
         {
-          "command": "criticmarkup.deletionAndComment",
+          "command": "mdmarkup.deletionAndComment",
           "when": "editorLangId == markdown",
-          "group": "1_criticmarkup@3"
+          "group": "1_mdmarkup@3"
         },
         {
-          "command": "criticmarkup.substituteAndComment",
+          "command": "mdmarkup.substituteAndComment",
           "when": "editorLangId == markdown",
-          "group": "1_criticmarkup@4"
+          "group": "1_mdmarkup@4"
         },
         {
-          "command": "criticmarkup.highlight",
+          "command": "mdmarkup.highlight",
           "when": "editorLangId == markdown",
-          "group": "2_criticmarkup@1"
+          "group": "2_mdmarkup@1"
         },
         {
-          "command": "criticmarkup.markAddition",
+          "command": "mdmarkup.markAddition",
           "when": "editorLangId == markdown",
-          "group": "2_criticmarkup@2"
+          "group": "2_mdmarkup@2"
         },
         {
-          "command": "criticmarkup.markDeletion",
+          "command": "mdmarkup.markDeletion",
           "when": "editorLangId == markdown",
-          "group": "2_criticmarkup@3"
+          "group": "2_mdmarkup@3"
         },
         {
-          "command": "criticmarkup.markSubstitution",
+          "command": "mdmarkup.markSubstitution",
           "when": "editorLangId == markdown",
-          "group": "2_criticmarkup@4"
+          "group": "2_mdmarkup@4"
         },
         {
-          "command": "criticmarkup.prevChange",
+          "command": "mdmarkup.prevChange",
           "when": "editorLangId == markdown",
           "group": "3_navigation@1"
         },
         {
-          "command": "criticmarkup.nextChange",
+          "command": "mdmarkup.nextChange",
           "when": "editorLangId == markdown",
           "group": "3_navigation@2"
         }
@@ -360,12 +363,12 @@
     },
     "keybindings": [
       {
-        "command": "criticmarkup.nextChange",
+        "command": "mdmarkup.nextChange",
         "key": "alt+shift+j",
         "when": "editorTextFocus && editorLangId == markdown"
       },
       {
-        "command": "criticmarkup.prevChange",
+        "command": "mdmarkup.prevChange",
         "key": "alt+shift+k",
         "when": "editorTextFocus && editorLangId == markdown"
       }
@@ -378,31 +381,31 @@
     ],
     "grammars": [
       {
-        "path": "./syntaxes/criticmarkup.json",
-        "scopeName": "criticmarkup.injection",
+        "path": "./syntaxes/mdmarkup.json",
+        "scopeName": "mdmarkup.injection",
         "injectTo": [
           "text.html.markdown"
         ]
       }
     ],
     "markdown.previewStyles": [
-      "./media/criticmarkup.css"
+      "./media/mdmarkup.css"
     ],
     "markdown.markdownItPlugins": true,
     "configuration": {
-      "title": "CriticMarkup",
+      "title": "Markdown Annotations",
       "properties": {
-        "criticmarkup.disableAuthorNames": {
+        "mdmarkup.includeAuthorNameInComments": {
           "type": "boolean",
-          "default": false,
-          "description": "Disable automatic author names in comments"
+          "default": true,
+          "description": "Include author name in comment attribution"
         },
-        "criticmarkup.authorName": {
+        "mdmarkup.authorName": {
           "type": "string",
           "default": "",
           "description": "Author name to use in comments (leave empty to use OS username)"
         },
-        "criticmarkup.includeTimestampInComments": {
+        "mdmarkup.includeTimestampInComments": {
           "type": "boolean",
           "default": true,
           "description": "Include timestamp in comment author attribution (format: username (yyyy-mm-dd hh:mm))"

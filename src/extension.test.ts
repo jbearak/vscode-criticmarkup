@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'bun:test';
 import * as formatting from './formatting';
 import MarkdownIt from 'markdown-it';
-import { criticmarkupPlugin } from './preview/criticmarkup-plugin';
+import { mdmarkupPlugin } from './preview/mdmarkup-plugin';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -291,43 +291,43 @@ describe('Command Handler Unit Tests', () => {
 // Integration tests for markdown-it plugin registration (Requirements 7.1)
 describe('Markdown Preview Integration', () => {
   describe('Plugin registration', () => {
-    it('should register CriticMarkup plugin with markdown-it', () => {
+    it('should register mdmarkup plugin with markdown-it', () => {
       const md = new MarkdownIt();
       
       // Apply the plugin (simulating what extendMarkdownIt does)
-      const extendedMd = md.use(criticmarkupPlugin);
+      const extendedMd = md.use(mdmarkupPlugin);
       
       expect(extendedMd).toBeDefined();
       
-      // Test that CriticMarkup is processed
+      // Test that mdmarkup is processed
       const html = extendedMd.render('{++addition++}');
-      expect(html).toContain('criticmarkup-addition');
+      expect(html).toContain('mdmarkup-addition');
       expect(html).toContain('<ins');
     });
 
-    it('should process all CriticMarkup types through the plugin', () => {
+    it('should process all mdmarkup types through the plugin', () => {
       const md = new MarkdownIt();
-      const extendedMd = md.use(criticmarkupPlugin);
+      const extendedMd = md.use(mdmarkupPlugin);
       
       // Test addition
       const additionHtml = extendedMd.render('{++added text++}');
-      expect(additionHtml).toContain('criticmarkup-addition');
+      expect(additionHtml).toContain('mdmarkup-addition');
       
       // Test deletion
       const deletionHtml = extendedMd.render('{--deleted text--}');
-      expect(deletionHtml).toContain('criticmarkup-deletion');
+      expect(deletionHtml).toContain('mdmarkup-deletion');
       
       // Test substitution
       const substitutionHtml = extendedMd.render('{~~old~>new~~}');
-      expect(substitutionHtml).toContain('criticmarkup-substitution');
+      expect(substitutionHtml).toContain('mdmarkup-substitution');
       
       // Test comment
       const commentHtml = extendedMd.render('{>>comment text<<}');
-      expect(commentHtml).toContain('criticmarkup-comment');
+      expect(commentHtml).toContain('mdmarkup-comment');
       
       // Test highlight
       const highlightHtml = extendedMd.render('{==highlighted text==}');
-      expect(highlightHtml).toContain('criticmarkup-highlight');
+      expect(highlightHtml).toContain('mdmarkup-highlight');
     });
   });
 
@@ -339,7 +339,7 @@ describe('Markdown Preview Integration', () => {
       expect(packageJson.contributes).toBeDefined();
       expect(packageJson.contributes['markdown.previewStyles']).toBeDefined();
       expect(Array.isArray(packageJson.contributes['markdown.previewStyles'])).toBe(true);
-      expect(packageJson.contributes['markdown.previewStyles']).toContain('./media/criticmarkup.css');
+      expect(packageJson.contributes['markdown.previewStyles']).toContain('./media/mdmarkup.css');
     });
 
     it('should declare markdown.markdownItPlugins in package.json', () => {
@@ -351,15 +351,15 @@ describe('Markdown Preview Integration', () => {
     });
 
     it('should have CSS file at declared path', () => {
-      const cssPath = path.join(__dirname, '..', 'media', 'criticmarkup.css');
+      const cssPath = path.join(__dirname, '..', 'media', 'mdmarkup.css');
       expect(fs.existsSync(cssPath)).toBe(true);
       
       const cssContent = fs.readFileSync(cssPath, 'utf-8');
-      expect(cssContent).toContain('.criticmarkup-addition');
-      expect(cssContent).toContain('.criticmarkup-deletion');
-      expect(cssContent).toContain('.criticmarkup-substitution');
-      expect(cssContent).toContain('.criticmarkup-comment');
-      expect(cssContent).toContain('.criticmarkup-highlight');
+      expect(cssContent).toContain('.mdmarkup-addition');
+      expect(cssContent).toContain('.mdmarkup-deletion');
+      expect(cssContent).toContain('.mdmarkup-substitution');
+      expect(cssContent).toContain('.mdmarkup-comment');
+      expect(cssContent).toContain('.mdmarkup-highlight');
     });
   });
 });

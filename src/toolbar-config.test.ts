@@ -11,13 +11,13 @@ describe('Toolbar Configuration Property-Based Tests', () => {
     return JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
   };
 
-  // Helper to get CriticMarkup-related toolbar entries
-  const getCriticMarkupToolbarEntries = (packageJson: any) => {
+  // Helper to get mdmarkup-related toolbar entries
+  const getmdmarkupToolbarEntries = (packageJson: any) => {
     const editorTitleMenu = packageJson.contributes?.menus?.['editor/title'] || [];
     
     return editorTitleMenu.filter((entry: any) => {
-      // Check if it's a CriticMarkup command
-      if (entry.command && entry.command.startsWith('criticmarkup.')) {
+      // Check if it's a mdmarkup command
+      if (entry.command && entry.command.startsWith('mdmarkup.')) {
         return true;
       }
       // Check if it's a markdown submenu (annotations or formatting)
@@ -40,12 +40,12 @@ describe('Toolbar Configuration Property-Based Tests', () => {
    * markdown files outside diff editor mode.
    */
   describe('Property 1: Toolbar button visibility configuration', () => {
-    it('should validate when clause for all CriticMarkup toolbar entries', () => {
+    it('should validate when clause for all mdmarkup toolbar entries', () => {
       fc.assert(
         fc.property(
           fc.constant(loadPackageJson()),
           (packageJson) => {
-            const toolbarEntries = getCriticMarkupToolbarEntries(packageJson);
+            const toolbarEntries = getmdmarkupToolbarEntries(packageJson);
             
             // Verify we found the expected entries
             expect(toolbarEntries.length).toBeGreaterThan(0);
@@ -65,7 +65,7 @@ describe('Toolbar Configuration Property-Based Tests', () => {
 
     it('should verify all four expected toolbar entries exist with correct when clauses', () => {
       const packageJson = loadPackageJson();
-      const toolbarEntries = getCriticMarkupToolbarEntries(packageJson);
+      const toolbarEntries = getmdmarkupToolbarEntries(packageJson);
       
       // Should have exactly 4 entries: 2 submenus + 2 commands
       expect(toolbarEntries.length).toBe(4);
@@ -73,8 +73,8 @@ describe('Toolbar Configuration Property-Based Tests', () => {
       // Find each expected entry
       const formattingSubmenu = toolbarEntries.find((e: any) => e.submenu === 'markdown.formatting');
       const annotationsSubmenu = toolbarEntries.find((e: any) => e.submenu === 'markdown.annotations');
-      const prevChangeCommand = toolbarEntries.find((e: any) => e.command === 'criticmarkup.prevChange');
-      const nextChangeCommand = toolbarEntries.find((e: any) => e.command === 'criticmarkup.nextChange');
+      const prevChangeCommand = toolbarEntries.find((e: any) => e.command === 'mdmarkup.prevChange');
+      const nextChangeCommand = toolbarEntries.find((e: any) => e.command === 'mdmarkup.nextChange');
       
       expect(formattingSubmenu).toBeDefined();
       expect(annotationsSubmenu).toBeDefined();
@@ -94,17 +94,17 @@ describe('Toolbar Configuration Property-Based Tests', () => {
    * Feature: editor-toolbar-buttons, Property 2: Button grouping and ordering
    * Validates: Requirements 3.1, 3.2
    * 
-   * For all four CriticMarkup toolbar buttons (formatting submenu, annotations submenu,
+   * For all four mdmarkup toolbar buttons (formatting submenu, annotations submenu,
    * prevChange, nextChange), they should be in the navigation group and ordered as:
    * formatting (@1), annotations (@2), prevChange (@3), nextChange (@4)
    */
   describe('Property 2: Button grouping and ordering', () => {
-    it('should validate navigation group and ordering for all CriticMarkup toolbar entries', () => {
+    it('should validate navigation group and ordering for all mdmarkup toolbar entries', () => {
       fc.assert(
         fc.property(
           fc.constant(loadPackageJson()),
           (packageJson) => {
-            const toolbarEntries = getCriticMarkupToolbarEntries(packageJson);
+            const toolbarEntries = getmdmarkupToolbarEntries(packageJson);
             
             // Verify all entries are in navigation group
             for (const entry of toolbarEntries) {
@@ -115,8 +115,8 @@ describe('Toolbar Configuration Property-Based Tests', () => {
             // Verify specific ordering
             const formattingSubmenu = toolbarEntries.find((e: any) => e.submenu === 'markdown.formatting');
             const annotationsSubmenu = toolbarEntries.find((e: any) => e.submenu === 'markdown.annotations');
-            const prevChangeCommand = toolbarEntries.find((e: any) => e.command === 'criticmarkup.prevChange');
-            const nextChangeCommand = toolbarEntries.find((e: any) => e.command === 'criticmarkup.nextChange');
+            const prevChangeCommand = toolbarEntries.find((e: any) => e.command === 'mdmarkup.prevChange');
+            const nextChangeCommand = toolbarEntries.find((e: any) => e.command === 'mdmarkup.nextChange');
             
             expect(formattingSubmenu?.group).toBe('navigation@1');
             expect(annotationsSubmenu?.group).toBe('navigation@2');
@@ -137,8 +137,8 @@ describe('Toolbar Configuration Property-Based Tests', () => {
       // Find indices of our four entries
       const formattingIndex = editorTitleMenu.findIndex((e: any) => e.submenu === 'markdown.formatting');
       const annotationsIndex = editorTitleMenu.findIndex((e: any) => e.submenu === 'markdown.annotations');
-      const prevChangeIndex = editorTitleMenu.findIndex((e: any) => e.command === 'criticmarkup.prevChange');
-      const nextChangeIndex = editorTitleMenu.findIndex((e: any) => e.command === 'criticmarkup.nextChange');
+      const prevChangeIndex = editorTitleMenu.findIndex((e: any) => e.command === 'mdmarkup.prevChange');
+      const nextChangeIndex = editorTitleMenu.findIndex((e: any) => e.command === 'mdmarkup.nextChange');
       
       // All should be found
       expect(formattingIndex).toBeGreaterThanOrEqual(0);
@@ -157,7 +157,7 @@ describe('Toolbar Configuration Property-Based Tests', () => {
         fc.property(
           fc.constant(loadPackageJson()),
           (packageJson) => {
-            const toolbarEntries = getCriticMarkupToolbarEntries(packageJson);
+            const toolbarEntries = getmdmarkupToolbarEntries(packageJson);
             
             // Extract group names (without @suffix)
             const groups = toolbarEntries.map((e: any) => {

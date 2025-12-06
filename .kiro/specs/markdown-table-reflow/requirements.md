@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This feature adds a "Reflow Table" command to the Markdown Formatting context menu in the VS Code CriticMarkup extension. The command will reformat Markdown tables to ensure proper alignment and consistent spacing, making tables more readable and maintainable.
+This feature adds a "Reflow Table" command to the Markdown Formatting context menu in the VS Code mdmarkup extension. The command will reformat Markdown tables to ensure proper alignment and consistent spacing, making tables more readable and maintainable.
 
 ## Glossary
 
@@ -10,7 +10,7 @@ This feature adds a "Reflow Table" command to the Markdown Formatting context me
 - **Reflow**: The process of reformatting a table to align columns and ensure consistent spacing
 - **Context Menu**: The right-click menu that appears in the editor
 - **Markdown Formatting Menu**: A submenu in the context menu that contains markdown formatting commands
-- **Extension**: The VS Code CriticMarkup extension that provides markdown editing features
+- **Extension**: The VS Code mdmarkup extension that provides markdown editing features
 
 ## Requirements
 

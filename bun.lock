@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "vscode-criticmarkup",
+      "name": "mdmarkup",
       "dependencies": {
         "markdown-it": "^14.1.0",
       },

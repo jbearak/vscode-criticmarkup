@@ -3,9 +3,9 @@ import type StateInline from 'markdown-it/lib/rules_inline/state_inline.mjs';
 import type StateBlock from 'markdown-it/lib/rules_block/state_block.mjs';
 
 /**
- * Defines a CriticMarkup pattern configuration
+ * Defines a mdmarkup pattern configuration
  */
-interface CriticMarkupPattern {
+interface mdmarkupPattern {
   name: string;           // Pattern identifier (e.g., 'addition', 'deletion')
   regex: RegExp;          // Regular expression to match the pattern
   cssClass: string;       // CSS class to apply to rendered HTML
@@ -13,38 +13,38 @@ interface CriticMarkupPattern {
 }
 
 /**
- * Pattern configurations for all five CriticMarkup types
+ * Pattern configurations for all five mdmarkup types
  * Note: Using .*? instead of .+? to allow empty patterns
  */
-const patterns: CriticMarkupPattern[] = [
+const patterns: mdmarkupPattern[] = [
   { 
     name: 'addition', 
     regex: /\{\+\+(.*?)\+\+\}/gs, 
-    cssClass: 'criticmarkup-addition', 
+    cssClass: 'mdmarkup-addition', 
     htmlTag: 'ins' 
   },
   { 
     name: 'deletion', 
     regex: /\{--(.*?)--\}/gs, 
-    cssClass: 'criticmarkup-deletion', 
+    cssClass: 'mdmarkup-deletion', 
     htmlTag: 'del' 
   },
   { 
     name: 'substitution', 
     regex: /\{~~(.*?)~>(.*?)~~\}/gs, 
-    cssClass: 'criticmarkup-substitution', 
+    cssClass: 'mdmarkup-substitution', 
     htmlTag: 'span' 
   },
   { 
     name: 'comment', 
     regex: /\{>>(.*?)<<\}/gs, 
-    cssClass: 'criticmarkup-comment', 
+    cssClass: 'mdmarkup-comment', 
     htmlTag: 'span' 
   },
   { 
     name: 'highlight', 
     regex: /\{==(.*?)==\}/gs, 
-    cssClass: 'criticmarkup-highlight', 
+    cssClass: 'mdmarkup-highlight', 
     htmlTag: 'mark' 
   }
 ];
@@ -81,7 +81,7 @@ function addInlineContent(state: StateInline, content: string): void {
 }
 
 /**
- * Block-level rule that identifies CriticMarkup patterns before paragraph parsing
+ * Block-level rule that identifies mdmarkup patterns before paragraph parsing
  * This prevents markdown-it from splitting patterns at empty lines
  * 
  * LIMITATION: Only detects patterns that start at the beginning of a line.
@@ -92,19 +92,19 @@ function addInlineContent(state: StateInline, content: string): void {
  * @param startLine - Starting line number
  * @param endLine - Ending line number
  * @param silent - Whether to only check without creating tokens
- * @returns true if a CriticMarkup block was found and processed
+ * @returns true if a mdmarkup block was found and processed
  */
-function criticmarkupBlock(state: StateBlock, startLine: number, endLine: number, silent: boolean): boolean {
+function mdmarkupBlock(state: StateBlock, startLine: number, endLine: number, silent: boolean): boolean {
   const pos = state.bMarks[startLine] + state.tShift[startLine];
   const max = state.eMarks[startLine];
   
-  // Quick check: does this line start with a potential CriticMarkup pattern?
+  // Quick check: does this line start with a potential mdmarkup pattern?
   if (pos + 3 > max) return false;
   
   const src = state.src;
   const lineStart = src.slice(pos, Math.min(pos + 3, max));
   
-  // Check if this line starts with a CriticMarkup opening marker
+  // Check if this line starts with a mdmarkup opening marker
   const patterns = ['{++', '{--', '{~~', '{>>', '{=='];
   if (!patterns.includes(lineStart)) {
     return false;
@@ -152,7 +152,7 @@ function criticmarkupBlock(state: StateBlock, startLine: number, endLine: number
   
   if (silent) return true;
   
-  // Create a paragraph token that contains the entire CriticMarkup pattern
+  // Create a paragraph token that contains the entire mdmarkup pattern
   const token = state.push('paragraph_open', 'p', 1);
   token.map = [startLine, nextLine];
   
@@ -169,17 +169,17 @@ function criticmarkupBlock(state: StateBlock, startLine: number, endLine: number
 }
 
 /**
- * Inline rule function that scans for CriticMarkup patterns and creates tokens
+ * Inline rule function that scans for mdmarkup patterns and creates tokens
  * @param state - The inline parsing state
  * @param silent - Whether to only check without creating tokens
  * @returns true if a pattern was found and processed
  */
-function parseCriticMarkup(state: StateInline, silent: boolean): boolean {
+function parsemdmarkup(state: StateInline, silent: boolean): boolean {
   const start = state.pos;
   const max = state.posMax;
   const src = state.src;
 
-  // Check if we're at a potential CriticMarkup start
+  // Check if we're at a potential mdmarkup start
   if (src.charCodeAt(start) !== 0x7B /* { */) {
     return false;
   }
@@ -191,13 +191,13 @@ function parseCriticMarkup(state: StateInline, silent: boolean): boolean {
     if (endPos !== -1) {
       if (!silent) {
         const content = src.slice(start + 3, endPos);
-        const tokenOpen = state.push('criticmarkup_addition_open', 'ins', 1);
-        tokenOpen.attrSet('class', 'criticmarkup-addition');
+        const tokenOpen = state.push('mdmarkup_addition_open', 'ins', 1);
+        tokenOpen.attrSet('class', 'mdmarkup-addition');
         
         // Add parsed inline content to allow nested Markdown processing
         addInlineContent(state, content);
         
-        state.push('criticmarkup_addition_close', 'ins', -1);
+        state.push('mdmarkup_addition_close', 'ins', -1);
       }
       state.pos = endPos + endMarker.length;
       return true;
@@ -211,13 +211,13 @@ function parseCriticMarkup(state: StateInline, silent: boolean): boolean {
     if (endPos !== -1) {
       if (!silent) {
         const content = src.slice(start + 3, endPos);
-        const tokenOpen = state.push('criticmarkup_deletion_open', 'del', 1);
-        tokenOpen.attrSet('class', 'criticmarkup-deletion');
+        const tokenOpen = state.push('mdmarkup_deletion_open', 'del', 1);
+        tokenOpen.attrSet('class', 'mdmarkup-deletion');
         
         // Add parsed inline content to allow nested Markdown processing
         addInlineContent(state, content);
         
-        state.push('criticmarkup_deletion_close', 'del', -1);
+        state.push('mdmarkup_deletion_close', 'del', -1);
       }
       state.pos = endPos + endMarker.length;
       return true;
@@ -236,28 +236,28 @@ function parseCriticMarkup(state: StateInline, silent: boolean): boolean {
           const oldText = fullContent.slice(0, separatorPos);
           const newText = fullContent.slice(separatorPos + 2);
           
-          const tokenOpen = state.push('criticmarkup_substitution_open', 'span', 1);
-          tokenOpen.attrSet('class', 'criticmarkup-substitution');
+          const tokenOpen = state.push('mdmarkup_substitution_open', 'span', 1);
+          tokenOpen.attrSet('class', 'mdmarkup-substitution');
           
           // Old text with deletion styling
-          const tokenOldOpen = state.push('criticmarkup_substitution_old_open', 'del', 1);
-          tokenOldOpen.attrSet('class', 'criticmarkup-deletion');
+          const tokenOldOpen = state.push('mdmarkup_substitution_old_open', 'del', 1);
+          tokenOldOpen.attrSet('class', 'mdmarkup-deletion');
           
           // Add parsed inline content to allow nested Markdown processing
           addInlineContent(state, oldText);
           
-          state.push('criticmarkup_substitution_old_close', 'del', -1);
+          state.push('mdmarkup_substitution_old_close', 'del', -1);
           
           // New text with addition styling
-          const tokenNewOpen = state.push('criticmarkup_substitution_new_open', 'ins', 1);
-          tokenNewOpen.attrSet('class', 'criticmarkup-addition');
+          const tokenNewOpen = state.push('mdmarkup_substitution_new_open', 'ins', 1);
+          tokenNewOpen.attrSet('class', 'mdmarkup-addition');
           
           // Add parsed inline content to allow nested Markdown processing
           addInlineContent(state, newText);
           
-          state.push('criticmarkup_substitution_new_close', 'ins', -1);
+          state.push('mdmarkup_substitution_new_close', 'ins', -1);
           
-          state.push('criticmarkup_substitution_close', 'span', -1);
+          state.push('mdmarkup_substitution_close', 'span', -1);
         }
         state.pos = endPos + endMarker.length;
         return true;
@@ -272,13 +272,13 @@ function parseCriticMarkup(state: StateInline, silent: boolean): boolean {
     if (endPos !== -1) {
       if (!silent) {
         const content = src.slice(start + 3, endPos);
-        const tokenOpen = state.push('criticmarkup_comment_open', 'span', 1);
-        tokenOpen.attrSet('class', 'criticmarkup-comment');
+        const tokenOpen = state.push('mdmarkup_comment_open', 'span', 1);
+        tokenOpen.attrSet('class', 'mdmarkup-comment');
         
         // Add parsed inline content to allow nested Markdown processing
         addInlineContent(state, content);
         
-        state.push('criticmarkup_comment_close', 'span', -1);
+        state.push('mdmarkup_comment_close', 'span', -1);
       }
       state.pos = endPos + endMarker.length;
       return true;
@@ -292,13 +292,13 @@ function parseCriticMarkup(state: StateInline, silent: boolean): boolean {
     if (endPos !== -1) {
       if (!silent) {
         const content = src.slice(start + 3, endPos);
-        const tokenOpen = state.push('criticmarkup_highlight_open', 'mark', 1);
-        tokenOpen.attrSet('class', 'criticmarkup-highlight');
+        const tokenOpen = state.push('mdmarkup_highlight_open', 'mark', 1);
+        tokenOpen.attrSet('class', 'mdmarkup-highlight');
         
         // Add parsed inline content to allow nested Markdown processing
         addInlineContent(state, content);
         
-        state.push('criticmarkup_highlight_close', 'mark', -1);
+        state.push('mdmarkup_highlight_close', 'mark', -1);
       }
       state.pos = endPos + endMarker.length;
       return true;
@@ -309,50 +309,50 @@ function parseCriticMarkup(state: StateInline, silent: boolean): boolean {
 }
 
 /**
- * Main plugin function that registers CriticMarkup parsing with markdown-it
+ * Main plugin function that registers mdmarkup parsing with markdown-it
  * @param md - The MarkdownIt instance to extend
  */
-export function criticmarkupPlugin(md: MarkdownIt): void {
+export function mdmarkupPlugin(md: MarkdownIt): void {
   // Register the block-level rule to handle multi-line patterns with empty lines
   // This must run very early, before heading and paragraph parsing
-  md.block.ruler.before('heading', 'criticmarkup_block', criticmarkupBlock);
+  md.block.ruler.before('heading', 'mdmarkup_block', mdmarkupBlock);
   
-  // Register the inline rule for CriticMarkup parsing
-  // Run before emphasis and other inline rules to handle CriticMarkup first
-  md.inline.ruler.before('emphasis', 'criticmarkup', parseCriticMarkup);
+  // Register the inline rule for mdmarkup parsing
+  // Run before emphasis and other inline rules to handle mdmarkup first
+  md.inline.ruler.before('emphasis', 'mdmarkup', parsemdmarkup);
   
-  // Register renderers for each CriticMarkup token type
+  // Register renderers for each mdmarkup token type
   for (const pattern of patterns) {
-    md.renderer.rules[`criticmarkup_${pattern.name}_open`] = (tokens, idx) => {
+    md.renderer.rules[`mdmarkup_${pattern.name}_open`] = (tokens, idx) => {
       const token = tokens[idx];
       const className = token.attrGet('class') || pattern.cssClass;
       return `<${pattern.htmlTag} class="${className}">`;
     };
     
-    md.renderer.rules[`criticmarkup_${pattern.name}_close`] = (tokens, idx) => {
+    md.renderer.rules[`mdmarkup_${pattern.name}_close`] = (tokens, idx) => {
       const token = tokens[idx];
       return `</${token.tag}>`;
     };
   }
   
   // Special renderers for substitution sub-parts
-  md.renderer.rules['criticmarkup_substitution_old_open'] = (tokens, idx) => {
+  md.renderer.rules['mdmarkup_substitution_old_open'] = (tokens, idx) => {
     const token = tokens[idx];
     const className = token.attrGet('class') || '';
     return `<del class="${className}">`;
   };
   
-  md.renderer.rules['criticmarkup_substitution_old_close'] = () => {
+  md.renderer.rules['mdmarkup_substitution_old_close'] = () => {
     return '</del>';
   };
   
-  md.renderer.rules['criticmarkup_substitution_new_open'] = (tokens, idx) => {
+  md.renderer.rules['mdmarkup_substitution_new_open'] = (tokens, idx) => {
     const token = tokens[idx];
     const className = token.attrGet('class') || '';
     return `<ins class="${className}">`;
   };
   
-  md.renderer.rules['criticmarkup_substitution_new_close'] = () => {
+  md.renderer.rules['mdmarkup_substitution_new_close'] = () => {
     return '</ins>';
   };
 }

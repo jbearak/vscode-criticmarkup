@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-// Combined pattern for all CriticMarkup syntax in a single regex
+// Combined pattern for all mdmarkup syntax in a single regex
 // Using [\s\S]*? to match zero or more characters (including newlines) to support empty patterns
 const combinedPattern = /\{\+\+([\s\S]*?)\+\+\}|\{--([\s\S]*?)--\}|\{\~\~([\s\S]*?)\~\~\}|\{>>([\s\S]*?)<<\}|\{==([\s\S]*?)==\}|\~\~([\s\S]*?)\~\~|<!--([\s\S]*?)-->/g;
 

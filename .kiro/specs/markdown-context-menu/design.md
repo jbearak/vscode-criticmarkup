@@ -2,7 +2,7 @@
 
 ## Overview
 
-This feature extends the CriticMarkup VS Code extension by adding context menu (right-click menu) support for applying CriticMarkup annotations and Markdown formatting to selected text. The implementation will register new VS Code commands for each formatting operation and contribute them to the editor context menu, organized into two submenus: "Markdown Annotations" (for CriticMarkup syntax) and "Markdown Formatting" (for standard Markdown operations).
+This feature extends the mdmarkup VS Code extension by adding context menu (right-click menu) support for applying CriticMarkup annotations and Markdown formatting to selected text. The implementation will register new VS Code commands for each formatting operation and contribute them to the editor context menu, organized into two submenus: "Markdown Annotations" (for mdmarkup syntax) and "Markdown Formatting" (for standard Markdown operations).
 
 The design follows VS Code extension patterns by:
 - Registering commands in `package.json` contributions
@@ -30,12 +30,12 @@ This separation ensures:
 New commands will be added to the `contributes.commands` section:
 
 **Markdown Annotations submenu:**
-- `criticmarkup.markAddition` - Mark as Addition
-- `criticmarkup.markDeletion` - Mark as Deletion
-- `criticmarkup.markSubstitution` - Substitution
-- `criticmarkup.highlight` - Highlight
-- `criticmarkup.insertComment` - Comment
-- `criticmarkup.highlightAndComment` - Highlight and Comment
+- `mdmarkup.markAddition` - Mark as Addition
+- `mdmarkup.markDeletion` - Mark as Deletion
+- `mdmarkup.markSubstitution` - Substitution
+- `mdmarkup.highlight` - Highlight
+- `mdmarkup.insertComment` - Comment
+- `mdmarkup.highlightAndComment` - Highlight and Comment
 
 **Markdown Formatting submenu:**
 - `markdown.formatBold` - Bold
@@ -246,5 +246,5 @@ Commands are then contributed to these submenus using the submenu ID in the menu
 
 - Minimum VS Code version: ^1.103.2
 - No additional dependencies required (except VS Code version)
-- Works with existing CriticMarkup syntax highlighting
+- Works with existing mdmarkup syntax highlighting
 - Compatible with VS Code's built-in Markdown features

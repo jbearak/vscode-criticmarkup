@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'bun:test';
 import * as fc from 'fast-check';
 import MarkdownIt from 'markdown-it';
-import { criticmarkupPlugin } from './criticmarkup-plugin';
+import { mdmarkupPlugin } from './mdmarkup-plugin';
 
 // Helper function to escape HTML entities like markdown-it does
 function escapeHtml(str: string): string {
@@ -18,11 +18,11 @@ const hasNoMarkdownSyntax = (s: string) => {
   return !s.includes('\\') && !s.includes('`') && !s.includes('*') && !s.includes('_') && !s.includes('[') && !s.includes(']');
 };
 
-describe('CriticMarkup Plugin Property Tests', () => {
+describe('mdmarkup Plugin Property Tests', () => {
 
-  // Feature: markdown-preview-highlighting, Property 1: CriticMarkup pattern transformation
+  // Feature: markdown-preview-highlighting, Property 1: mdmarkup pattern transformation
   // Validates: Requirements 1.1, 2.1, 3.1, 4.1, 5.1
-  describe('Property 1: CriticMarkup pattern transformation', () => {
+  describe('Property 1: mdmarkup pattern transformation', () => {
 
     it('should transform addition patterns into HTML with correct CSS class', () => {
       fc.assert(
@@ -30,13 +30,13 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.string({ minLength: 1, maxLength: 100 }).filter(s => !s.includes('{') && !s.includes('}') && hasNoMarkdownSyntax(s)),
           (text) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const input = `{++${text}++}`;
             const output = md.render(input);
             
             // Should contain the CSS class
-            expect(output).toContain('criticmarkup-addition');
+            expect(output).toContain('mdmarkup-addition');
             // Should contain the text content (HTML-escaped)
             expect(output).toContain(escapeHtml(text));
             // Should use ins tag
@@ -53,13 +53,13 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.string({ minLength: 1, maxLength: 100 }).filter(s => !s.includes('{') && !s.includes('}') && hasNoMarkdownSyntax(s)),
           (text) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const input = `{--${text}--}`;
             const output = md.render(input);
             
             // Should contain the CSS class
-            expect(output).toContain('criticmarkup-deletion');
+            expect(output).toContain('mdmarkup-deletion');
             // Should contain the text content (HTML-escaped)
             expect(output).toContain(escapeHtml(text));
             // Should use del tag
@@ -76,13 +76,13 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.string({ minLength: 1, maxLength: 100 }).filter(s => !s.includes('{') && !s.includes('}') && !s.includes('<') && !s.includes('>') && hasNoMarkdownSyntax(s)),
           (text) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const input = `{>>${text}<<}`;
             const output = md.render(input);
             
             // Should contain the CSS class
-            expect(output).toContain('criticmarkup-comment');
+            expect(output).toContain('mdmarkup-comment');
             // Should contain the text content (HTML-escaped)
             expect(output).toContain(escapeHtml(text));
             // Should use span tag
@@ -99,13 +99,13 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.string({ minLength: 1, maxLength: 100 }).filter(s => !s.includes('{') && !s.includes('}') && hasNoMarkdownSyntax(s)),
           (text) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const input = `{==${text}==}`;
             const output = md.render(input);
             
             // Should contain the CSS class
-            expect(output).toContain('criticmarkup-highlight');
+            expect(output).toContain('mdmarkup-highlight');
             // Should contain the text content (HTML-escaped)
             expect(output).toContain(escapeHtml(text));
             // Should use mark tag
@@ -123,14 +123,14 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('{') && !s.includes('}') && !s.includes('~') && !s.includes('>') && hasNoMarkdownSyntax(s)),
           (oldText, newText) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const input = `{~~${oldText}~>${newText}~~}`;
             const output = md.render(input);
             
             // Should contain both deletion and addition CSS classes
-            expect(output).toContain('criticmarkup-deletion');
-            expect(output).toContain('criticmarkup-addition');
+            expect(output).toContain('mdmarkup-deletion');
+            expect(output).toContain('mdmarkup-addition');
             // Should contain both text contents (HTML-escaped)
             expect(output).toContain(escapeHtml(oldText));
             expect(output).toContain(escapeHtml(newText));
@@ -153,13 +153,13 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.array(fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('{') && !s.includes('}') && hasNoMarkdownSyntax(s)), { minLength: 2, maxLength: 5 }),
           (texts) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const input = texts.map(t => `{++${t}++}`).join(' ');
             const output = md.render(input);
             
             // Count occurrences of the CSS class
-            const classCount = (output.match(/criticmarkup-addition/g) || []).length;
+            const classCount = (output.match(/mdmarkup-addition/g) || []).length;
             expect(classCount).toBe(texts.length);
             
             // All texts should be present (HTML-escaped)
@@ -178,13 +178,13 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.array(fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('{') && !s.includes('}') && hasNoMarkdownSyntax(s)), { minLength: 2, maxLength: 5 }),
           (texts) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const input = texts.map(t => `{--${t}--}`).join(' ');
             const output = md.render(input);
             
             // Count occurrences of the CSS class
-            const classCount = (output.match(/criticmarkup-deletion/g) || []).length;
+            const classCount = (output.match(/mdmarkup-deletion/g) || []).length;
             expect(classCount).toBe(texts.length);
             
             // All texts should be present (HTML-escaped)
@@ -203,13 +203,13 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.array(fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('{') && !s.includes('}') && !s.includes('<') && !s.includes('>') && hasNoMarkdownSyntax(s)), { minLength: 2, maxLength: 5 }),
           (texts) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const input = texts.map(t => `{>>${t}<<}`).join(' ');
             const output = md.render(input);
             
             // Count occurrences of the CSS class
-            const classCount = (output.match(/criticmarkup-comment/g) || []).length;
+            const classCount = (output.match(/mdmarkup-comment/g) || []).length;
             expect(classCount).toBe(texts.length);
             
             // All texts should be present (HTML-escaped)
@@ -228,13 +228,13 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.array(fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('{') && !s.includes('}') && hasNoMarkdownSyntax(s)), { minLength: 2, maxLength: 5 }),
           (texts) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const input = texts.map(t => `{==${t}==}`).join(' ');
             const output = md.render(input);
             
             // Count occurrences of the CSS class
-            const classCount = (output.match(/criticmarkup-highlight/g) || []).length;
+            const classCount = (output.match(/mdmarkup-highlight/g) || []).length;
             expect(classCount).toBe(texts.length);
             
             // All texts should be present (HTML-escaped)
@@ -259,14 +259,14 @@ describe('CriticMarkup Plugin Property Tests', () => {
           ),
           (pairs) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const input = pairs.map(([old, newText]) => `{~~${old}~>${newText}~~}`).join(' ');
             const output = md.render(input);
             
             // Each substitution should have both deletion and addition classes
-            const deletionCount = (output.match(/criticmarkup-deletion/g) || []).length;
-            const additionCount = (output.match(/criticmarkup-addition/g) || []).length;
+            const deletionCount = (output.match(/mdmarkup-deletion/g) || []).length;
+            const additionCount = (output.match(/mdmarkup-addition/g) || []).length;
             expect(deletionCount).toBe(pairs.length);
             expect(additionCount).toBe(pairs.length);
             
@@ -297,26 +297,26 @@ describe('CriticMarkup Plugin Property Tests', () => {
       return true;
     });
 
-    // Arbitrary for CriticMarkup pattern types
-    const criticMarkupPattern = fc.constantFrom(
-      { type: 'addition', open: '{++', close: '++}', cssClass: 'criticmarkup-addition' },
-      { type: 'deletion', open: '{--', close: '--}', cssClass: 'criticmarkup-deletion' },
-      { type: 'comment', open: '{>>', close: '<<}', cssClass: 'criticmarkup-comment' },
-      { type: 'highlight', open: '{==', close: '==}', cssClass: 'criticmarkup-highlight' }
+    // Arbitrary for mdmarkup pattern types
+    const mdmarkupPattern = fc.constantFrom(
+      { type: 'addition', open: '{++', close: '++}', cssClass: 'mdmarkup-addition' },
+      { type: 'deletion', open: '{--', close: '--}', cssClass: 'mdmarkup-deletion' },
+      { type: 'comment', open: '{>>', close: '<<}', cssClass: 'mdmarkup-comment' },
+      { type: 'highlight', open: '{==', close: '==}', cssClass: 'mdmarkup-highlight' }
     );
 
-    it('should preserve unordered list structure with CriticMarkup', () => {
+    it('should preserve unordered list structure with mdmarkup', () => {
       fc.assert(
         fc.property(
           fc.array(
-            fc.tuple(validListItemContent, criticMarkupPattern, validListItemContent),
+            fc.tuple(validListItemContent, mdmarkupPattern, validListItemContent),
             { minLength: 2, maxLength: 5 }
           ),
           (items) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
-            // Generate unordered list with CriticMarkup in each item
+            // Generate unordered list with mdmarkup in each item
             const input = items.map(([prefix, pattern, content]) => 
               `- ${prefix} ${pattern.open}${content}${pattern.close}`
             ).join('\n');
@@ -331,7 +331,7 @@ describe('CriticMarkup Plugin Property Tests', () => {
             const liCount = (output.match(/<li>/g) || []).length;
             expect(liCount).toBe(items.length);
             
-            // Each item should have its CriticMarkup styling applied
+            // Each item should have its mdmarkup styling applied
             items.forEach(([prefix, pattern, content]) => {
               expect(output).toContain(pattern.cssClass);
               // Check for content (trimmed, as markdown-it normalizes whitespace)
@@ -350,18 +350,18 @@ describe('CriticMarkup Plugin Property Tests', () => {
       );
     });
 
-    it('should preserve ordered list structure with CriticMarkup', () => {
+    it('should preserve ordered list structure with mdmarkup', () => {
       fc.assert(
         fc.property(
           fc.array(
-            fc.tuple(validListItemContent, criticMarkupPattern, validListItemContent),
+            fc.tuple(validListItemContent, mdmarkupPattern, validListItemContent),
             { minLength: 2, maxLength: 5 }
           ),
           (items) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
-            // Generate ordered list with CriticMarkup in each item
+            // Generate ordered list with mdmarkup in each item
             const input = items.map(([prefix, pattern, content], idx) => 
               `${idx + 1}. ${prefix} ${pattern.open}${content}${pattern.close}`
             ).join('\n');
@@ -376,7 +376,7 @@ describe('CriticMarkup Plugin Property Tests', () => {
             const liCount = (output.match(/<li>/g) || []).length;
             expect(liCount).toBe(items.length);
             
-            // Each item should have its CriticMarkup styling applied
+            // Each item should have its mdmarkup styling applied
             items.forEach(([prefix, pattern, content]) => {
               expect(output).toContain(pattern.cssClass);
               // Check for content (trimmed, as markdown-it normalizes whitespace)
@@ -395,24 +395,24 @@ describe('CriticMarkup Plugin Property Tests', () => {
       );
     });
 
-    it('should preserve list structure with multiple CriticMarkup patterns per item', () => {
+    it('should preserve list structure with multiple mdmarkup patterns per item', () => {
       fc.assert(
         fc.property(
           fc.array(
             fc.tuple(
               validListItemContent,
-              criticMarkupPattern,
+              mdmarkupPattern,
               validListItemContent,
-              criticMarkupPattern,
+              mdmarkupPattern,
               validListItemContent
             ),
             { minLength: 2, maxLength: 4 }
           ),
           (items) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
-            // Generate list with multiple CriticMarkup patterns per item
+            // Generate list with multiple mdmarkup patterns per item
             const input = items.map(([text1, pattern1, text2, pattern2, text3]) => 
               `- ${text1} ${pattern1.open}${text2}${pattern1.close} ${pattern2.open}${text3}${pattern2.close}`
             ).join('\n');
@@ -427,7 +427,7 @@ describe('CriticMarkup Plugin Property Tests', () => {
             const liCount = (output.match(/<li>/g) || []).length;
             expect(liCount).toBe(items.length);
             
-            // Each item should have both CriticMarkup patterns applied
+            // Each item should have both mdmarkup patterns applied
             items.forEach(([text1, pattern1, text2, pattern2, text3]) => {
               expect(output).toContain(pattern1.cssClass);
               expect(output).toContain(pattern2.cssClass);
@@ -464,7 +464,7 @@ describe('CriticMarkup Plugin Property Tests', () => {
           ),
           (items) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             // Generate list with substitution patterns
             const input = items.map(([prefix, oldText, newText]) => 
@@ -483,7 +483,7 @@ describe('CriticMarkup Plugin Property Tests', () => {
             
             // Each item should have substitution styling (both deletion and addition)
             items.forEach(([prefix, oldText, newText]) => {
-              expect(output).toContain('criticmarkup-substitution');
+              expect(output).toContain('mdmarkup-substitution');
               // Check for content (trimmed, as markdown-it normalizes whitespace)
               const trimmedPrefix = prefix.trim();
               const trimmedOld = oldText.trim();
@@ -510,7 +510,7 @@ describe('CriticMarkup Plugin Property Tests', () => {
   describe('Property 3: Multiline content preservation', () => {
     // Helper to filter out strings that would trigger block-level Markdown parsing or inline formatting
     // Block-level elements (headings, lists, code blocks, etc.) are parsed before inline elements,
-    // which would break up the CriticMarkup pattern
+    // which would break up the mdmarkup pattern
     const isValidMultilineContent = (s: string) => {
       if (!s || s.trim().length === 0) return false;
       // Exclude strings with Markdown special characters
@@ -532,14 +532,14 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.array(fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('{') && !s.includes('}') && isValidMultilineContent(s)), { minLength: 2, maxLength: 4 }),
           (lines) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const text = lines.join('\n');
             const input = `{++${text}++}`;
             const output = md.render(input);
             
             // Should contain the CSS class
-            expect(output).toContain('criticmarkup-addition');
+            expect(output).toContain('mdmarkup-addition');
             // Should preserve all line content (HTML-escaped, trimmed for Markdown whitespace normalization)
             lines.forEach(line => {
               const trimmed = line.trim();
@@ -559,14 +559,14 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.array(fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('{') && !s.includes('}') && isValidMultilineContent(s)), { minLength: 2, maxLength: 4 }),
           (lines) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const text = lines.join('\n');
             const input = `{--${text}--}`;
             const output = md.render(input);
             
             // Should contain the CSS class
-            expect(output).toContain('criticmarkup-deletion');
+            expect(output).toContain('mdmarkup-deletion');
             // Should preserve all line content (HTML-escaped, trimmed for Markdown whitespace normalization)
             lines.forEach(line => {
               const trimmed = line.trim();
@@ -586,14 +586,14 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.array(fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('{') && !s.includes('}') && !s.includes('<') && !s.includes('>') && isValidMultilineContent(s)), { minLength: 2, maxLength: 4 }),
           (lines) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const text = lines.join('\n');
             const input = `{>>${text}<<}`;
             const output = md.render(input);
             
             // Should contain the CSS class
-            expect(output).toContain('criticmarkup-comment');
+            expect(output).toContain('mdmarkup-comment');
             // Should preserve all line content (HTML-escaped, trimmed for Markdown whitespace normalization)
             lines.forEach(line => {
               const trimmed = line.trim();
@@ -613,14 +613,14 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.array(fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('{') && !s.includes('}') && isValidMultilineContent(s)), { minLength: 2, maxLength: 4 }),
           (lines) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const text = lines.join('\n');
             const input = `{==${text}==}`;
             const output = md.render(input);
             
             // Should contain the CSS class
-            expect(output).toContain('criticmarkup-highlight');
+            expect(output).toContain('mdmarkup-highlight');
             // Should preserve all line content (HTML-escaped, trimmed for Markdown whitespace normalization)
             lines.forEach(line => {
               const trimmed = line.trim();
@@ -641,7 +641,7 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.array(fc.string({ minLength: 1, maxLength: 30 }).filter(s => !s.includes('{') && !s.includes('}') && !s.includes('~') && !s.includes('>') && isValidMultilineContent(s)), { minLength: 2, maxLength: 3 }),
           (oldLines, newLines) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const oldText = oldLines.join('\n');
             const newText = newLines.join('\n');
@@ -649,8 +649,8 @@ describe('CriticMarkup Plugin Property Tests', () => {
             const output = md.render(input);
             
             // Should contain both CSS classes
-            expect(output).toContain('criticmarkup-deletion');
-            expect(output).toContain('criticmarkup-addition');
+            expect(output).toContain('mdmarkup-deletion');
+            expect(output).toContain('mdmarkup-addition');
             // Should preserve all line content (HTML-escaped, trimmed for Markdown whitespace normalization)
             oldLines.forEach(line => {
               const trimmed = line.trim();
@@ -682,21 +682,21 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('{') && !s.includes('}') && !s.includes('~') && !s.includes('>') && hasNoMarkdownSyntax(s)),
           (oldText, newText) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             const input = `{~~${oldText}~>${newText}~~}`;
             const output = md.render(input);
             
             // Should contain wrapper span with substitution class
-            expect(output).toContain('criticmarkup-substitution');
+            expect(output).toContain('mdmarkup-substitution');
             
             // Should contain old text with deletion styling
-            expect(output).toContain('criticmarkup-deletion');
+            expect(output).toContain('mdmarkup-deletion');
             expect(output).toContain('<del');
             expect(output).toContain(escapeHtml(oldText));
             
             // Should contain new text with addition styling
-            expect(output).toContain('criticmarkup-addition');
+            expect(output).toContain('mdmarkup-addition');
             expect(output).toContain('<ins');
             expect(output).toContain(escapeHtml(newText));
             
@@ -717,7 +717,7 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.string({ minLength: 30, maxLength: 80 }).filter(s => !s.includes('{') && !s.includes('}') && !s.includes('~') && !s.includes('>') && hasNoMarkdownSyntax(s)),
           (shortText, longText) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             // Test short -> long
             const input1 = `{~~${shortText}~>${longText}~~}`;
@@ -725,8 +725,8 @@ describe('CriticMarkup Plugin Property Tests', () => {
             
             expect(output1).toContain(escapeHtml(shortText));
             expect(output1).toContain(escapeHtml(longText));
-            expect(output1).toContain('criticmarkup-deletion');
-            expect(output1).toContain('criticmarkup-addition');
+            expect(output1).toContain('mdmarkup-deletion');
+            expect(output1).toContain('mdmarkup-addition');
             
             // Test long -> short
             const input2 = `{~~${longText}~>${shortText}~~}`;
@@ -734,8 +734,8 @@ describe('CriticMarkup Plugin Property Tests', () => {
             
             expect(output2).toContain(escapeHtml(longText));
             expect(output2).toContain(escapeHtml(shortText));
-            expect(output2).toContain('criticmarkup-deletion');
-            expect(output2).toContain('criticmarkup-addition');
+            expect(output2).toContain('mdmarkup-deletion');
+            expect(output2).toContain('mdmarkup-addition');
           }
         ),
         { numRuns: 100 }
@@ -748,17 +748,17 @@ describe('CriticMarkup Plugin Property Tests', () => {
           fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('{') && !s.includes('}') && !s.includes('~') && !s.includes('>') && hasNoMarkdownSyntax(s)),
           (text) => {
             const md = new MarkdownIt();
-            md.use(criticmarkupPlugin);
+            md.use(mdmarkupPlugin);
             
             // Empty old text (effectively an addition)
             const input1 = `{~~${text}~>~~}`;
             const output1 = md.render(input1);
-            expect(output1).toContain('criticmarkup-substitution');
+            expect(output1).toContain('mdmarkup-substitution');
             
             // Empty new text (effectively a deletion)
             const input2 = `{~~~>${text}~~}`;
             const output2 = md.render(input2);
-            expect(output2).toContain('criticmarkup-substitution');
+            expect(output2).toContain('mdmarkup-substitution');
           }
         ),
         { numRuns: 100 }
@@ -773,65 +773,65 @@ describe('Edge Cases', () => {
   describe('Unclosed patterns', () => {
     it('should treat unclosed addition pattern as literal text', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '{++unclosed text';
       const output = md.render(input);
       
-      // Should not contain CriticMarkup CSS class
-      expect(output).not.toContain('criticmarkup-addition');
+      // Should not contain mdmarkup CSS class
+      expect(output).not.toContain('mdmarkup-addition');
       // Should contain the literal text
       expect(output).toContain('{++unclosed text');
     });
 
     it('should treat unclosed deletion pattern as literal text', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '{--unclosed text';
       const output = md.render(input);
       
-      // Should not contain CriticMarkup CSS class
-      expect(output).not.toContain('criticmarkup-deletion');
+      // Should not contain mdmarkup CSS class
+      expect(output).not.toContain('mdmarkup-deletion');
       // Should contain the literal text
       expect(output).toContain('{--unclosed text');
     });
 
     it('should treat unclosed substitution pattern as literal text', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '{~~old~>new';
       const output = md.render(input);
       
-      // Should not contain CriticMarkup CSS class
-      expect(output).not.toContain('criticmarkup-substitution');
+      // Should not contain mdmarkup CSS class
+      expect(output).not.toContain('mdmarkup-substitution');
       // Should contain the literal text
       expect(output).toContain('{~~old~&gt;new');
     });
 
     it('should treat unclosed comment pattern as literal text', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '{>>unclosed comment';
       const output = md.render(input);
       
-      // Should not contain CriticMarkup CSS class
-      expect(output).not.toContain('criticmarkup-comment');
+      // Should not contain mdmarkup CSS class
+      expect(output).not.toContain('mdmarkup-comment');
       // Should contain the literal text (with HTML escaping)
       expect(output).toContain('{&gt;&gt;unclosed comment');
     });
 
     it('should treat unclosed highlight pattern as literal text', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '{==unclosed text';
       const output = md.render(input);
       
-      // Should not contain CriticMarkup CSS class
-      expect(output).not.toContain('criticmarkup-highlight');
+      // Should not contain mdmarkup CSS class
+      expect(output).not.toContain('mdmarkup-highlight');
       // Should contain the literal text
       expect(output).toContain('{==unclosed text');
     });
@@ -840,13 +840,13 @@ describe('Edge Cases', () => {
   describe('Empty patterns', () => {
     it('should render empty addition pattern as empty styled element', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '{++++}';
       const output = md.render(input);
       
       // Should contain the CSS class
-      expect(output).toContain('criticmarkup-addition');
+      expect(output).toContain('mdmarkup-addition');
       // Should contain the ins tag
       expect(output).toContain('<ins');
       expect(output).toContain('</ins>');
@@ -854,13 +854,13 @@ describe('Edge Cases', () => {
 
     it('should render empty deletion pattern as empty styled element', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '{----}';
       const output = md.render(input);
       
       // Should contain the CSS class
-      expect(output).toContain('criticmarkup-deletion');
+      expect(output).toContain('mdmarkup-deletion');
       // Should contain the del tag
       expect(output).toContain('<del');
       expect(output).toContain('</del>');
@@ -868,13 +868,13 @@ describe('Edge Cases', () => {
 
     it('should render empty substitution pattern as empty styled element', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '{~~~>~~}';
       const output = md.render(input);
       
       // Should contain the CSS class
-      expect(output).toContain('criticmarkup-substitution');
+      expect(output).toContain('mdmarkup-substitution');
       // Should contain both del and ins tags
       expect(output).toContain('<del');
       expect(output).toContain('<ins');
@@ -882,13 +882,13 @@ describe('Edge Cases', () => {
 
     it('should render empty comment pattern as empty styled element', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '{>><<}';
       const output = md.render(input);
       
       // Should contain the CSS class
-      expect(output).toContain('criticmarkup-comment');
+      expect(output).toContain('mdmarkup-comment');
       // Should contain the span tag
       expect(output).toContain('<span');
       expect(output).toContain('</span>');
@@ -896,77 +896,77 @@ describe('Edge Cases', () => {
 
     it('should render empty highlight pattern as empty styled element', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '{====}';
       const output = md.render(input);
       
       // Should contain the CSS class
-      expect(output).toContain('criticmarkup-highlight');
+      expect(output).toContain('mdmarkup-highlight');
       // Should contain the mark tag
       expect(output).toContain('<mark');
       expect(output).toContain('</mark>');
     });
   });
 
-  describe('CriticMarkup in code blocks', () => {
-    it('should not process CriticMarkup in fenced code blocks', () => {
+  describe('mdmarkup in code blocks', () => {
+    it('should not process mdmarkup in fenced code blocks', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '```\n{++addition++}\n{--deletion--}\n```';
       const output = md.render(input);
       
-      // Should not contain CriticMarkup CSS classes
-      expect(output).not.toContain('criticmarkup-addition');
-      expect(output).not.toContain('criticmarkup-deletion');
+      // Should not contain mdmarkup CSS classes
+      expect(output).not.toContain('mdmarkup-addition');
+      expect(output).not.toContain('mdmarkup-deletion');
       // Should contain the literal text in a code block
       expect(output).toContain('<code>');
       expect(output).toContain('{++addition++}');
       expect(output).toContain('{--deletion--}');
     });
 
-    it('should not process CriticMarkup in indented code blocks', () => {
+    it('should not process mdmarkup in indented code blocks', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '    {++addition++}\n    {--deletion--}';
       const output = md.render(input);
       
-      // Should not contain CriticMarkup CSS classes
-      expect(output).not.toContain('criticmarkup-addition');
-      expect(output).not.toContain('criticmarkup-deletion');
+      // Should not contain mdmarkup CSS classes
+      expect(output).not.toContain('mdmarkup-addition');
+      expect(output).not.toContain('mdmarkup-deletion');
       // Should contain the literal text in a code block
       expect(output).toContain('<code>');
     });
   });
 
-  describe('CriticMarkup in inline code', () => {
-    it('should not process CriticMarkup in inline code', () => {
+  describe('mdmarkup in inline code', () => {
+    it('should not process mdmarkup in inline code', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = 'This is `{++addition++}` in inline code';
       const output = md.render(input);
       
-      // Should not contain CriticMarkup CSS class
-      expect(output).not.toContain('criticmarkup-addition');
+      // Should not contain mdmarkup CSS class
+      expect(output).not.toContain('mdmarkup-addition');
       // Should contain the literal text in inline code
       expect(output).toContain('<code>');
       expect(output).toContain('{++addition++}');
     });
 
-    it('should not process multiple CriticMarkup patterns in inline code', () => {
+    it('should not process multiple mdmarkup patterns in inline code', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = 'Code: `{++add++} {--del--} {==highlight==}`';
       const output = md.render(input);
       
-      // Should not contain any CriticMarkup CSS classes
-      expect(output).not.toContain('criticmarkup-addition');
-      expect(output).not.toContain('criticmarkup-deletion');
-      expect(output).not.toContain('criticmarkup-highlight');
+      // Should not contain any mdmarkup CSS classes
+      expect(output).not.toContain('mdmarkup-addition');
+      expect(output).not.toContain('mdmarkup-deletion');
+      expect(output).not.toContain('mdmarkup-highlight');
       // Should contain the literal text in inline code
       expect(output).toContain('<code>');
     });
@@ -975,7 +975,7 @@ describe('Edge Cases', () => {
   describe('Nested same-type patterns', () => {
     it('should process first complete addition pattern when nested', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       // When patterns are nested, the parser finds the first closing marker
       // So {++outer {++inner++} text++} matches from first {++ to first ++}
@@ -984,7 +984,7 @@ describe('Edge Cases', () => {
       const output = md.render(input);
       
       // Should contain the CSS class
-      expect(output).toContain('criticmarkup-addition');
+      expect(output).toContain('mdmarkup-addition');
       // Should contain "outer" and "{++inner" (the content before first ++})
       expect(output).toContain('outer');
       expect(output).toContain('{++inner');
@@ -992,13 +992,13 @@ describe('Edge Cases', () => {
 
     it('should process first complete deletion pattern when nested', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '{--outer {--inner--} text--}';
       const output = md.render(input);
       
       // Should contain the CSS class
-      expect(output).toContain('criticmarkup-deletion');
+      expect(output).toContain('mdmarkup-deletion');
       // Should contain "outer" and "{--inner" (the content before first --})
       expect(output).toContain('outer');
       expect(output).toContain('{--inner');
@@ -1006,13 +1006,13 @@ describe('Edge Cases', () => {
 
     it('should process first complete highlight pattern when nested', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = '{==outer {==inner==} text==}';
       const output = md.render(input);
       
       // Should contain the CSS class
-      expect(output).toContain('criticmarkup-highlight');
+      expect(output).toContain('mdmarkup-highlight');
       // Should contain "outer" and "{==inner" (the content before first ==})
       expect(output).toContain('outer');
       expect(output).toContain('{==inner');
@@ -1020,10 +1020,10 @@ describe('Edge Cases', () => {
   });
 
   // Validates: Requirements 8.2
-  describe('CriticMarkup in Markdown lists', () => {
-    it('should process CriticMarkup in unordered list items', () => {
+  describe('mdmarkup in Markdown lists', () => {
+    it('should process mdmarkup in unordered list items', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = `- Item with {++addition++}
 - Item with {--deletion--}
@@ -1035,10 +1035,10 @@ describe('Edge Cases', () => {
       expect(output).toContain('<li>');
       expect(output).toContain('</ul>');
       
-      // Should contain CriticMarkup styling
-      expect(output).toContain('criticmarkup-addition');
-      expect(output).toContain('criticmarkup-deletion');
-      expect(output).toContain('criticmarkup-highlight');
+      // Should contain mdmarkup styling
+      expect(output).toContain('mdmarkup-addition');
+      expect(output).toContain('mdmarkup-deletion');
+      expect(output).toContain('mdmarkup-highlight');
       
       // Should contain the text content
       expect(output).toContain('Item with');
@@ -1047,9 +1047,9 @@ describe('Edge Cases', () => {
       expect(output).toContain('highlight');
     });
 
-    it('should process CriticMarkup in ordered list items', () => {
+    it('should process mdmarkup in ordered list items', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = `1. First item with {++addition++}
 2. Second item with {--deletion--}
@@ -1061,10 +1061,10 @@ describe('Edge Cases', () => {
       expect(output).toContain('<li>');
       expect(output).toContain('</ol>');
       
-      // Should contain CriticMarkup styling
-      expect(output).toContain('criticmarkup-addition');
-      expect(output).toContain('criticmarkup-deletion');
-      expect(output).toContain('criticmarkup-comment');
+      // Should contain mdmarkup styling
+      expect(output).toContain('mdmarkup-addition');
+      expect(output).toContain('mdmarkup-deletion');
+      expect(output).toContain('mdmarkup-comment');
       
       // Should contain the text content
       expect(output).toContain('First item');
@@ -1072,9 +1072,9 @@ describe('Edge Cases', () => {
       expect(output).toContain('Third item');
     });
 
-    it('should process CriticMarkup substitution in list items', () => {
+    it('should process mdmarkup substitution in list items', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = `- Item with {~~old text~>new text~~}
 - Another item with {~~before~>after~~}`;
@@ -1085,9 +1085,9 @@ describe('Edge Cases', () => {
       expect(output).toContain('<li>');
       
       // Should contain substitution styling
-      expect(output).toContain('criticmarkup-substitution');
-      expect(output).toContain('criticmarkup-deletion');
-      expect(output).toContain('criticmarkup-addition');
+      expect(output).toContain('mdmarkup-substitution');
+      expect(output).toContain('mdmarkup-deletion');
+      expect(output).toContain('mdmarkup-addition');
       
       // Should contain both old and new text
       expect(output).toContain('old text');
@@ -1096,9 +1096,9 @@ describe('Edge Cases', () => {
       expect(output).toContain('after');
     });
 
-    it('should process multiple CriticMarkup patterns in a single list item', () => {
+    it('should process multiple mdmarkup patterns in a single list item', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = `- Item with {++addition++} and {--deletion--} and {==highlight==}`;
       const output = md.render(input);
@@ -1107,10 +1107,10 @@ describe('Edge Cases', () => {
       expect(output).toContain('<ul>');
       expect(output).toContain('<li>');
       
-      // Should contain all CriticMarkup styling
-      expect(output).toContain('criticmarkup-addition');
-      expect(output).toContain('criticmarkup-deletion');
-      expect(output).toContain('criticmarkup-highlight');
+      // Should contain all mdmarkup styling
+      expect(output).toContain('mdmarkup-addition');
+      expect(output).toContain('mdmarkup-deletion');
+      expect(output).toContain('mdmarkup-highlight');
       
       // Should contain the text content
       expect(output).toContain('addition');
@@ -1118,9 +1118,9 @@ describe('Edge Cases', () => {
       expect(output).toContain('highlight');
     });
 
-    it('should preserve nested list structure with CriticMarkup', () => {
+    it('should preserve nested list structure with mdmarkup', () => {
       const md = new MarkdownIt();
-      md.use(criticmarkupPlugin);
+      md.use(mdmarkupPlugin);
       
       const input = `- Parent item {++added++}
   - Nested item {--deleted--}
@@ -1132,11 +1132,11 @@ describe('Edge Cases', () => {
       expect(output).toContain('<ul>');
       expect(output).toContain('<li>');
       
-      // Should contain all CriticMarkup styling
-      expect(output).toContain('criticmarkup-addition');
-      expect(output).toContain('criticmarkup-deletion');
-      expect(output).toContain('criticmarkup-highlight');
-      expect(output).toContain('criticmarkup-comment');
+      // Should contain all mdmarkup styling
+      expect(output).toContain('mdmarkup-addition');
+      expect(output).toContain('mdmarkup-deletion');
+      expect(output).toContain('mdmarkup-highlight');
+      expect(output).toContain('mdmarkup-comment');
       
       // Should contain the text content
       expect(output).toContain('Parent item');
@@ -1147,7 +1147,7 @@ describe('Edge Cases', () => {
   });
 });
 
-// Feature: multiline-criticmarkup-support, Property 4: Empty line preservation
+// Feature: multiline-mdmarkup-support, Property 4: Empty line preservation
 // Validates: Requirements 6.1, 6.2, 6.3, 6.4
 describe('Property 4: Empty line preservation', () => {
   // Generator for text that can contain empty lines
@@ -1176,14 +1176,14 @@ describe('Property 4: Empty line preservation', () => {
         multilineTextWithEmptyLines,
         (lines) => {
           const md = new MarkdownIt();
-          md.use(criticmarkupPlugin);
+          md.use(mdmarkupPlugin);
           
           const text = lines.join('\n');
           const input = `{++${text}++}`;
           const output = md.render(input);
           
           // Should contain the CSS class
-          expect(output).toContain('criticmarkup-addition');
+          expect(output).toContain('mdmarkup-addition');
           // Should use ins tag
           expect(output).toContain('<ins');
           
@@ -1206,14 +1206,14 @@ describe('Property 4: Empty line preservation', () => {
         multilineTextWithEmptyLines,
         (lines) => {
           const md = new MarkdownIt();
-          md.use(criticmarkupPlugin);
+          md.use(mdmarkupPlugin);
           
           const text = lines.join('\n');
           const input = `{--${text}--}`;
           const output = md.render(input);
           
           // Should contain the CSS class
-          expect(output).toContain('criticmarkup-deletion');
+          expect(output).toContain('mdmarkup-deletion');
           // Should use del tag
           expect(output).toContain('<del');
           
@@ -1238,14 +1238,14 @@ describe('Property 4: Empty line preservation', () => {
         ),
         (lines) => {
           const md = new MarkdownIt();
-          md.use(criticmarkupPlugin);
+          md.use(mdmarkupPlugin);
           
           const text = lines.join('\n');
           const input = `{>>${text}<<}`;
           const output = md.render(input);
           
           // Should contain the CSS class
-          expect(output).toContain('criticmarkup-comment');
+          expect(output).toContain('mdmarkup-comment');
           // Should use span tag
           expect(output).toContain('<span');
           
@@ -1268,14 +1268,14 @@ describe('Property 4: Empty line preservation', () => {
         multilineTextWithEmptyLines,
         (lines) => {
           const md = new MarkdownIt();
-          md.use(criticmarkupPlugin);
+          md.use(mdmarkupPlugin);
           
           const text = lines.join('\n');
           const input = `{==${text}==}`;
           const output = md.render(input);
           
           // Should contain the CSS class
-          expect(output).toContain('criticmarkup-highlight');
+          expect(output).toContain('mdmarkup-highlight');
           // Should use mark tag
           expect(output).toContain('<mark');
           
@@ -1303,7 +1303,7 @@ describe('Property 4: Empty line preservation', () => {
         ),
         (oldLines, newLines) => {
           const md = new MarkdownIt();
-          md.use(criticmarkupPlugin);
+          md.use(mdmarkupPlugin);
           
           const oldText = oldLines.join('\n');
           const newText = newLines.join('\n');
@@ -1311,10 +1311,10 @@ describe('Property 4: Empty line preservation', () => {
           const output = md.render(input);
           
           // Should contain substitution CSS class
-          expect(output).toContain('criticmarkup-substitution');
+          expect(output).toContain('mdmarkup-substitution');
           // Should contain both deletion and addition classes
-          expect(output).toContain('criticmarkup-deletion');
-          expect(output).toContain('criticmarkup-addition');
+          expect(output).toContain('mdmarkup-deletion');
+          expect(output).toContain('mdmarkup-addition');
           
           // Should preserve non-empty line content from old text
           oldLines.forEach(line => {
@@ -1338,9 +1338,9 @@ describe('Property 4: Empty line preservation', () => {
   });
 });
 
-// Feature: multiline-criticmarkup-support, Property 3: Multi-line preview rendering
+// Feature: multiline-mdmarkup-support, Property 3: Multi-line preview rendering
 // Validates: Requirements 1.4, 2.4, 3.4, 4.4, 5.4, 6.2
-describe('Property 3: Multi-line preview rendering (multiline-criticmarkup-support)', () => {
+describe('Property 3: Multi-line preview rendering (multiline-mdmarkup-support)', () => {
   // Generator for multi-line text (without empty lines for this property)
   const multilineText = fc.array(
     fc.string({ minLength: 1, maxLength: 50 }).filter(s => 
@@ -1358,14 +1358,14 @@ describe('Property 3: Multi-line preview rendering (multiline-criticmarkup-suppo
         multilineText,
         (lines) => {
           const md = new MarkdownIt();
-          md.use(criticmarkupPlugin);
+          md.use(mdmarkupPlugin);
           
           const text = lines.join('\n');
           const input = `{++${text}++}`;
           const output = md.render(input);
           
           // Should contain the CSS class
-          expect(output).toContain('criticmarkup-addition');
+          expect(output).toContain('mdmarkup-addition');
           // Should use ins tag
           expect(output).toContain('<ins');
           expect(output).toContain('</ins>');
@@ -1389,14 +1389,14 @@ describe('Property 3: Multi-line preview rendering (multiline-criticmarkup-suppo
         multilineText,
         (lines) => {
           const md = new MarkdownIt();
-          md.use(criticmarkupPlugin);
+          md.use(mdmarkupPlugin);
           
           const text = lines.join('\n');
           const input = `{--${text}--}`;
           const output = md.render(input);
           
           // Should contain the CSS class
-          expect(output).toContain('criticmarkup-deletion');
+          expect(output).toContain('mdmarkup-deletion');
           // Should use del tag
           expect(output).toContain('<del');
           expect(output).toContain('</del>');
@@ -1422,14 +1422,14 @@ describe('Property 3: Multi-line preview rendering (multiline-criticmarkup-suppo
         ),
         (lines) => {
           const md = new MarkdownIt();
-          md.use(criticmarkupPlugin);
+          md.use(mdmarkupPlugin);
           
           const text = lines.join('\n');
           const input = `{>>${text}<<}`;
           const output = md.render(input);
           
           // Should contain the CSS class
-          expect(output).toContain('criticmarkup-comment');
+          expect(output).toContain('mdmarkup-comment');
           // Should use span tag
           expect(output).toContain('<span');
           expect(output).toContain('</span>');
@@ -1453,14 +1453,14 @@ describe('Property 3: Multi-line preview rendering (multiline-criticmarkup-suppo
         multilineText,
         (lines) => {
           const md = new MarkdownIt();
-          md.use(criticmarkupPlugin);
+          md.use(mdmarkupPlugin);
           
           const text = lines.join('\n');
           const input = `{==${text}==}`;
           const output = md.render(input);
           
           // Should contain the CSS class
-          expect(output).toContain('criticmarkup-highlight');
+          expect(output).toContain('mdmarkup-highlight');
           // Should use mark tag
           expect(output).toContain('<mark');
           expect(output).toContain('</mark>');
@@ -1489,7 +1489,7 @@ describe('Property 3: Multi-line preview rendering (multiline-criticmarkup-suppo
         ),
         (oldLines, newLines) => {
           const md = new MarkdownIt();
-          md.use(criticmarkupPlugin);
+          md.use(mdmarkupPlugin);
           
           const oldText = oldLines.join('\n');
           const newText = newLines.join('\n');
@@ -1497,10 +1497,10 @@ describe('Property 3: Multi-line preview rendering (multiline-criticmarkup-suppo
           const output = md.render(input);
           
           // Should contain substitution wrapper
-          expect(output).toContain('criticmarkup-substitution');
+          expect(output).toContain('mdmarkup-substitution');
           // Should contain both deletion and addition classes
-          expect(output).toContain('criticmarkup-deletion');
-          expect(output).toContain('criticmarkup-addition');
+          expect(output).toContain('mdmarkup-deletion');
+          expect(output).toContain('mdmarkup-addition');
           // Should use both del and ins tags
           expect(output).toContain('<del');
           expect(output).toContain('<ins');
@@ -1531,7 +1531,7 @@ describe('Property 3: Multi-line preview rendering (multiline-criticmarkup-suppo
 // Multi-line patterns that start mid-line are not fully supported in preview or syntax highlighting
 // They work for navigation only
 
-// Feature: multiline-criticmarkup-support, Property 5: Mid-line multi-line pattern recognition (PARTIAL)
+// Feature: multiline-mdmarkup-support, Property 5: Mid-line multi-line pattern recognition (PARTIAL)
 // Validates: Requirements 1.1, 1.3, 1.4, 2.1, 2.3, 2.4, 3.1, 3.3, 3.4, 4.1, 4.3, 4.4, 5.1, 5.3, 5.4
 // LIMITATION: Only navigation is tested here, preview/syntax highlighting not supported
 describe('Property 5: Mid-line multi-line pattern recognition (navigation only)', () => {
@@ -1540,7 +1540,7 @@ describe('Property 5: Mid-line multi-line pattern recognition (navigation only)'
   const plainText = fc.string({ minLength: 1, maxLength: 30 }).filter(s => {
     if (!s || s.trim().length === 0) return false;
     if (!hasNoMarkdownSyntax(s)) return false;
-    // Exclude CriticMarkup markers
+    // Exclude mdmarkup markers
     if (s.includes('{') || s.includes('}')) return false;
     // Exclude newlines
     if (s.includes('\n')) return false;
@@ -1568,10 +1568,10 @@ describe('Property 5: Mid-line multi-line pattern recognition (navigation only)'
 
   // Pattern type generator
   const patternTypeGen = fc.constantFrom(
-    { name: 'addition', open: '{++', close: '++}', cssClass: 'criticmarkup-addition', tag: 'ins' },
-    { name: 'deletion', open: '{--', close: '--}', cssClass: 'criticmarkup-deletion', tag: 'del' },
-    { name: 'comment', open: '{>>', close: '<<}', cssClass: 'criticmarkup-comment', tag: 'span' },
-    { name: 'highlight', open: '{==', close: '==}', cssClass: 'criticmarkup-highlight', tag: 'mark' }
+    { name: 'addition', open: '{++', close: '++}', cssClass: 'mdmarkup-addition', tag: 'ins' },
+    { name: 'deletion', open: '{--', close: '--}', cssClass: 'mdmarkup-deletion', tag: 'del' },
+    { name: 'comment', open: '{>>', close: '<<}', cssClass: 'mdmarkup-comment', tag: 'span' },
+    { name: 'highlight', open: '{==', close: '==}', cssClass: 'mdmarkup-highlight', tag: 'mark' }
   );
 
   // Note: Property tests removed - mid-line multi-line patterns are not supported in preview
@@ -1583,14 +1583,14 @@ describe('Mid-line multi-line pattern limitations', () => {
   
   it('should handle single-line patterns mid-line correctly', () => {
     const md = new MarkdownIt();
-    md.use(criticmarkupPlugin);
+    md.use(mdmarkupPlugin);
     
     const input = `Text {++add++} and {--del--} patterns`;
     const output = md.render(input);
     
     // Single-line patterns work fine mid-line
-    expect(output).toContain('criticmarkup-addition');
-    expect(output).toContain('criticmarkup-deletion');
+    expect(output).toContain('mdmarkup-addition');
+    expect(output).toContain('mdmarkup-deletion');
     expect(output).toContain('Text');
     expect(output).toContain('add');
     expect(output).toContain('and');
@@ -1600,7 +1600,7 @@ describe('Mid-line multi-line pattern limitations', () => {
 
   it('should document that mid-line multi-line patterns are not fully supported', () => {
     const md = new MarkdownIt();
-    md.use(criticmarkupPlugin);
+    md.use(mdmarkupPlugin);
     
     // This pattern starts mid-line and spans multiple lines
     // It will NOT be properly handled by the block-level rule

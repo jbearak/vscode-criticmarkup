@@ -6,7 +6,7 @@ This document summarizes the implementation attempt for Task 7: "Fix mid-line mu
 
 ## What Was Attempted
 
-We attempted to extend the `criticmarkupBlock` function in `src/preview/criticmarkup-plugin.ts` to detect and handle CriticMarkup patterns that:
+We attempted to extend the `mdmarkupBlock` function in `src/preview/mdmarkup-plugin.ts` to detect and handle mdmarkup patterns that:
 1. Start mid-line (after other text on the same line)
 2. Span multiple lines
 3. Work correctly in preview rendering, syntax highlighting, and navigation
@@ -45,7 +45,7 @@ After implementation and testing, we decided to **revert to the simpler approach
 - ✅ Multi-line patterns starting at line beginning (preview, navigation, highlighting)
 - ✅ Navigation for ALL patterns (including mid-line multi-line)
 - ✅ Empty lines within patterns
-- ✅ All five CriticMarkup pattern types
+- ✅ All five mdmarkup pattern types
 
 ### Known Limitations (Documented)
 - ❌ Preview rendering for mid-line multi-line patterns
@@ -56,7 +56,7 @@ After implementation and testing, we decided to **revert to the simpler approach
 ## Code Changes
 
 ### Reverted
-- Removed complex mid-line detection logic from `criticmarkupBlock`
+- Removed complex mid-line detection logic from `mdmarkupBlock`
 - Removed mid-line property tests from test suite
 - Simplified back to original working approach
 
@@ -100,11 +100,11 @@ pattern++}
 
 ## Files Modified
 
-- `src/preview/criticmarkup-plugin.ts` - Simplified `criticmarkupBlock` function
-- `src/preview/criticmarkup-plugin.test.ts` - Removed mid-line property tests, added limitation tests
+- `src/preview/mdmarkup-plugin.ts` - Simplified `mdmarkupBlock` function
+- `src/preview/mdmarkup-plugin.test.ts` - Removed mid-line property tests, added limitation tests
 - `README.md` - Added clear documentation of limitations
-- `.kiro/specs/multiline-criticmarkup-support/design.md` - Updated with decision rationale
-- `.kiro/specs/multiline-criticmarkup-support/tasks.md` - Added implementation notes
+- `.kiro/specs/multiline-mdmarkup-support/design.md` - Updated with decision rationale
+- `.kiro/specs/multiline-mdmarkup-support/tasks.md` - Added implementation notes
 
 ## Conclusion
 
