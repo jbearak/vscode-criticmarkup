@@ -123,7 +123,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// Register table formatting commands
 	context.subscriptions.push(
 		vscode.commands.registerCommand('markdown.reflowTable', () => 
-			applyLineBasedFormatting((text) => formatting.reflowTable(text))
+			applyTableFormatting((text) => formatting.reflowTable(text))
 		)
 	);
 
@@ -235,6 +235,65 @@ function applyLineBasedFormatting(formatter: (text: string) => formatting.TextTr
 			// Expand selection to include full lines
 			const startLine = selection.start.line;
 			const endLine = selection.end.line;
+			const fullLineRange = new vscode.Range(
+				editor.document.lineAt(startLine).range.start,
+				editor.document.lineAt(endLine).range.end
+			);
+			
+			const text = editor.document.getText(fullLineRange);
+			const transformation = formatter(text);
+			editBuilder.replace(fullLineRange, transformation.newText);
+		}
+	});
+}
+
+/**
+ * Helper function to apply table formatting
+ * If text is selected: applies to all selected lines
+ * If no selection: detects table boundaries by looking for empty lines above and below
+ * @param formatter - Function that takes text and returns a TextTransformation
+ */
+function applyTableFormatting(formatter: (text: string) => formatting.TextTransformation): void {
+	const editor = vscode.window.activeTextEditor;
+	if (!editor) {
+		return;
+	}
+
+	editor.edit(editBuilder => {
+		for (const selection of editor.selections) {
+			let startLine: number;
+			let endLine: number;
+
+			if (selection.isEmpty) {
+				// No selection - detect table boundaries
+				const cursorLine = selection.active.line;
+				
+				// Find start of table (look upward for empty line or document start)
+				startLine = cursorLine;
+				while (startLine > 0) {
+					const lineText = editor.document.lineAt(startLine - 1).text.trim();
+					if (lineText === '') {
+						break;
+					}
+					startLine--;
+				}
+				
+				// Find end of table (look downward for empty line or document end)
+				endLine = cursorLine;
+				const lastLine = editor.document.lineCount - 1;
+				while (endLine < lastLine) {
+					const lineText = editor.document.lineAt(endLine + 1).text.trim();
+					if (lineText === '') {
+						break;
+					}
+					endLine++;
+				}
+			} else {
+				// Text is selected - expand to full lines
+				startLine = selection.start.line;
+				endLine = selection.end.line;
+			}
+
 			const fullLineRange = new vscode.Range(
 				editor.document.lineAt(startLine).range.start,
 				editor.document.lineAt(endLine).range.end
