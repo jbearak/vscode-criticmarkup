@@ -162,10 +162,20 @@ function applyFormatting(formatter: (text: string) => formatting.TextTransformat
 
 	// Store original selections and their transformations before the edit
 	const selectionsData = editor.selections.map(selection => {
-		const text = editor.document.getText(selection);
+		let effectiveSelection = selection;
+		
+		// If no text is selected (cursor position only), try to expand to word
+		if (selection.isEmpty) {
+			const wordRange = editor.document.getWordRangeAtPosition(selection.active);
+			if (wordRange) {
+				effectiveSelection = new vscode.Selection(wordRange.start, wordRange.end);
+			}
+		}
+		
+		const text = editor.document.getText(effectiveSelection);
 		const transformation = formatter(text);
 		return {
-			selection,
+			selection: effectiveSelection,
 			transformation,
 			text
 		};
