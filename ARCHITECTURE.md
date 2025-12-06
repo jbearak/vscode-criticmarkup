@@ -175,5 +175,5 @@ Please use the following checklists to manually verify the code integrity and fu
 - [ ] **Timestamp Format**: Verify the ISO-like format `yyyy-mm-dd hh:mm`.
 
 ### `package.json` & `syntaxes/mdmarkup.json`
-- [ ] **Grammar Scopes**: Verify TextMate scopes (`markup.inserted`, etc.) map to standard themes correctly.
-- [ ] **Activation Events**: Confirm `onLanguage:markdown` is present so the extension loads.
+- [x] **Grammar Scopes**: Verify TextMate scopes (`markup.inserted`, etc.) map to standard themes correctly.
+- [x] **Activation Events**: Confirm `onLanguage:markdown` is present so the extension loads.

@@ -4,12 +4,12 @@
   "description": "Markdown formatting and CriticMarkup annotations tools",
   "version": "0.9.0",
   "engines": {
-    "vscode": "^1.31.0"
+    "vscode": "^1.103.2"
   },
   "categories": [
-    "Snippets",
+    "Formatters",
     "Programming Languages",
-    "Other"
+    "Snippets"
   ],
   "keywords": [
     "markdown",
@@ -20,7 +20,7 @@
     "markdown formatting"
   ],
   "publisher": "jbearak",
-  "license": "SEE LICENSE IN LICENSE.txt",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/jbearak/mdmarkup/issues"
   },
@@ -29,22 +29,18 @@
     "url": "https://github.com/jbearak/mdmarkup.git"
   },
   "activationEvents": [
-    "onLanguage:markdown",
-    "onCommand:mdmarkup.nextChange",
-    "onCommand:mdmarkup.prevChange"
+    "onLanguage:markdown"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "mdmarkup.nextChange",
-        "title": "Next Change",
-        "icon": "$(chevron-down)"
+        "title": "Next Change"
       },
       {
         "command": "mdmarkup.prevChange",
-        "title": "Previous Change",
-        "icon": "$(chevron-up)"
+        "title": "Previous Change"
       },
       {
         "command": "mdmarkup.markAddition",
@@ -83,84 +79,80 @@
         "title": "Comment and mark as deletion"
       },
       {
-        "command": "markdown.formatBold",
+        "command": "mdmarkup.formatBold",
         "title": "Bold"
       },
       {
-        "command": "markdown.formatItalic",
+        "command": "mdmarkup.formatItalic",
         "title": "Italic"
       },
       {
-        "command": "markdown.formatBoldItalic",
+        "command": "mdmarkup.formatBoldItalic",
         "title": "Bold Italic"
       },
       {
-        "command": "markdown.formatStrikethrough",
+        "command": "mdmarkup.formatStrikethrough",
         "title": "Strikethrough"
       },
       {
-        "command": "markdown.formatUnderline",
+        "command": "mdmarkup.formatUnderline",
         "title": "Underline"
       },
       {
-        "command": "markdown.formatInlineCode",
+        "command": "mdmarkup.formatInlineCode",
         "title": "Inline Code"
       },
       {
-        "command": "markdown.formatCodeBlock",
+        "command": "mdmarkup.formatCodeBlock",
         "title": "Code Block"
       },
       {
-        "command": "markdown.formatLink",
+        "command": "mdmarkup.formatLink",
         "title": "Link"
       },
       {
-        "command": "markdown.formatBulletedList",
+        "command": "mdmarkup.formatBulletedList",
         "title": "Bulleted List"
       },
       {
-        "command": "markdown.formatNumberedList",
+        "command": "mdmarkup.formatNumberedList",
         "title": "Numbered List"
       },
       {
-        "command": "markdown.formatTaskList",
+        "command": "mdmarkup.formatTaskList",
         "title": "Task List"
       },
       {
-        "command": "markdown.formatQuoteBlock",
+        "command": "mdmarkup.formatQuoteBlock",
         "title": "Quote Block"
       },
       {
-        "command": "markdown.formatHeading1",
+        "command": "mdmarkup.formatHeading1",
         "title": "Heading 1"
       },
       {
-        "command": "markdown.formatHeading2",
+        "command": "mdmarkup.formatHeading2",
         "title": "Heading 2"
       },
       {
-        "command": "markdown.formatHeading3",
+        "command": "mdmarkup.formatHeading3",
         "title": "Heading 3"
       },
       {
-        "command": "markdown.formatHeading4",
+        "command": "mdmarkup.formatHeading4",
         "title": "Heading 4"
       },
       {
-        "command": "markdown.formatHeading5",
+        "command": "mdmarkup.formatHeading5",
         "title": "Heading 5"
       },
       {
-        "command": "markdown.formatHeading6",
+        "command": "mdmarkup.formatHeading6",
         "title": "Heading 6"
       },
       {
-        "command": "markdown.reflowTable",
+        "command": "mdmarkup.reflowTable",
         "title": "Reflow Table"
-      },
-      {
-        "command": "mdmarkup.debugAuthorName",
-        "title": "mdmarkup: Debug Author Name"
       }
     ],
     "submenus": [
@@ -258,67 +250,67 @@
       ],
       "markdown.formatting": [
         {
-          "command": "markdown.formatBold",
+          "command": "mdmarkup.formatBold",
           "when": "editorLangId == markdown",
           "group": "1_format@1"
         },
         {
-          "command": "markdown.formatItalic",
+          "command": "mdmarkup.formatItalic",
           "when": "editorLangId == markdown",
           "group": "1_format@2"
         },
         {
-          "command": "markdown.formatBoldItalic",
+          "command": "mdmarkup.formatBoldItalic",
           "when": "editorLangId == markdown",
           "group": "1_format@3"
         },
         {
-          "command": "markdown.formatStrikethrough",
+          "command": "mdmarkup.formatStrikethrough",
           "when": "editorLangId == markdown",
           "group": "1_format@4"
         },
         {
-          "command": "markdown.formatUnderline",
+          "command": "mdmarkup.formatUnderline",
           "when": "editorLangId == markdown",
           "group": "1_format@5"
         },
         {
-          "command": "markdown.formatInlineCode",
+          "command": "mdmarkup.formatInlineCode",
           "when": "editorLangId == markdown",
           "group": "1_format@6"
         },
         {
-          "command": "markdown.formatCodeBlock",
+          "command": "mdmarkup.formatCodeBlock",
           "when": "editorLangId == markdown",
           "group": "1_format@7"
         },
         {
-          "command": "markdown.formatLink",
+          "command": "mdmarkup.formatLink",
           "when": "editorLangId == markdown",
           "group": "1_format@8"
         },
         {
-          "command": "markdown.formatBulletedList",
+          "command": "mdmarkup.formatBulletedList",
           "when": "editorLangId == markdown",
           "group": "2_lists@1"
         },
         {
-          "command": "markdown.formatNumberedList",
+          "command": "mdmarkup.formatNumberedList",
           "when": "editorLangId == markdown",
           "group": "2_lists@2"
         },
         {
-          "command": "markdown.formatTaskList",
+          "command": "mdmarkup.formatTaskList",
           "when": "editorLangId == markdown",
           "group": "2_lists@3"
         },
         {
-          "command": "markdown.formatQuoteBlock",
+          "command": "mdmarkup.formatQuoteBlock",
           "when": "editorLangId == markdown",
           "group": "2_lists@4"
         },
         {
-          "command": "markdown.reflowTable",
+          "command": "mdmarkup.reflowTable",
           "when": "editorLangId == markdown",
           "group": "2_tables@5"
         },
@@ -330,32 +322,32 @@
       ],
       "markdown.heading": [
         {
-          "command": "markdown.formatHeading1",
+          "command": "mdmarkup.formatHeading1",
           "when": "editorLangId == markdown",
           "group": "1_heading@1"
         },
         {
-          "command": "markdown.formatHeading2",
+          "command": "mdmarkup.formatHeading2",
           "when": "editorLangId == markdown",
           "group": "1_heading@2"
         },
         {
-          "command": "markdown.formatHeading3",
+          "command": "mdmarkup.formatHeading3",
           "when": "editorLangId == markdown",
           "group": "1_heading@3"
         },
         {
-          "command": "markdown.formatHeading4",
+          "command": "mdmarkup.formatHeading4",
           "when": "editorLangId == markdown",
           "group": "1_heading@4"
         },
         {
-          "command": "markdown.formatHeading5",
+          "command": "mdmarkup.formatHeading5",
           "when": "editorLangId == markdown",
           "group": "1_heading@5"
         },
         {
-          "command": "markdown.formatHeading6",
+          "command": "mdmarkup.formatHeading6",
           "when": "editorLangId == markdown",
           "group": "1_heading@6"
         }
@@ -421,7 +413,7 @@
     "@types/markdown-it": "^14.1.2",
     "@types/mocha": "^2.2.42",
     "@types/node": "^10.14.4",
-    "@types/vscode": "^1.31.0",
+    "@types/vscode": "^1.103.2",
     "fast-check": "^4.3.0",
     "tslint": "^5.14.0",
     "typescript": "^5.9.3"

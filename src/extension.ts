@@ -11,39 +11,6 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('mdmarkup.prevChange', () => changes.prev())
 	);
 
-	// Debug command to show available author name sources
-	context.subscriptions.push(
-		vscode.commands.registerCommand('mdmarkup.debugAuthorName', () => {
-			const results: string[] = [];
-			
-			// Check settings
-			const config = vscode.workspace.getConfiguration('mdmarkup');
-			const includeAuthorName = config.get<boolean>('includeAuthorNameInComments', true);
-			const authorNameSetting = config.get<string>('authorName', '');
-			
-			results.push(`Setting - includeAuthorNameInComments: ${includeAuthorName}`);
-			results.push(`Setting - authorName: ${authorNameSetting || '(not set)'}`);
-			
-			// Check OS username
-			const os = require('os');
-			try {
-				const userInfo = os.userInfo();
-				results.push(`OS username: ${userInfo.username}`);
-			} catch (error) {
-				results.push(`OS username: Error - ${error}`);
-			}
-			
-			// Show what getAuthorName() would return
-			const authorName = author.getAuthorName();
-			results.push(`\ngetAuthorName() returns: ${authorName || '(null)'}`);
-			
-			vscode.window.showInformationMessage(
-				'Author Name Sources:\n\n' + results.join('\n'),
-				{ modal: true }
-			);
-		})
-	);
-
 	// Register CriticMarkup annotation commands
 	context.subscriptions.push(
 		vscode.commands.registerCommand('mdmarkup.markAddition', () => 
@@ -82,69 +49,69 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Register Markdown formatting commands
 	context.subscriptions.push(
-		vscode.commands.registerCommand('markdown.formatBold', () => 
+		vscode.commands.registerCommand('mdmarkup.formatBold', () => 
 			applyFormatting((text) => formatting.wrapSelection(text, '**', '**'))
 		),
-		vscode.commands.registerCommand('markdown.formatItalic', () => 
+		vscode.commands.registerCommand('mdmarkup.formatItalic', () => 
 			applyFormatting((text) => formatting.wrapSelection(text, '_', '_'))
 		),
-		vscode.commands.registerCommand('markdown.formatBoldItalic', () => 
+		vscode.commands.registerCommand('mdmarkup.formatBoldItalic', () => 
 			applyFormatting((text) => formatting.formatBoldItalic(text))
 		),
-		vscode.commands.registerCommand('markdown.formatStrikethrough', () => 
+		vscode.commands.registerCommand('mdmarkup.formatStrikethrough', () => 
 			applyFormatting((text) => formatting.wrapSelection(text, '~~', '~~'))
 		),
-		vscode.commands.registerCommand('markdown.formatUnderline', () => 
+		vscode.commands.registerCommand('mdmarkup.formatUnderline', () => 
 			applyFormatting((text) => formatting.wrapSelection(text, '<u>', '</u>'))
 		),
-		vscode.commands.registerCommand('markdown.formatInlineCode', () => 
+		vscode.commands.registerCommand('mdmarkup.formatInlineCode', () => 
 			applyFormatting((text) => formatting.wrapSelection(text, '`', '`'))
 		),
-		vscode.commands.registerCommand('markdown.formatCodeBlock', () => 
+		vscode.commands.registerCommand('mdmarkup.formatCodeBlock', () => 
 			applyFormatting((text) => formatting.wrapCodeBlock(text))
 		),
-		vscode.commands.registerCommand('markdown.formatLink', () => 
+		vscode.commands.registerCommand('mdmarkup.formatLink', () => 
 			applyFormatting((text) => formatting.formatLink(text))
 		),
-		vscode.commands.registerCommand('markdown.formatBulletedList', () => 
+		vscode.commands.registerCommand('mdmarkup.formatBulletedList', () => 
 			applyLineBasedFormatting((text) => formatting.wrapLines(text, '- '))
 		),
-		vscode.commands.registerCommand('markdown.formatNumberedList', () => 
+		vscode.commands.registerCommand('mdmarkup.formatNumberedList', () => 
 			applyLineBasedFormatting((text) => formatting.wrapLinesNumbered(text))
 		),
-		vscode.commands.registerCommand('markdown.formatTaskList', () => 
+		vscode.commands.registerCommand('mdmarkup.formatTaskList', () => 
 			applyLineBasedFormatting((text) => formatting.formatTaskList(text))
 		),
-		vscode.commands.registerCommand('markdown.formatQuoteBlock', () => 
+		vscode.commands.registerCommand('mdmarkup.formatQuoteBlock', () => 
 			applyLineBasedFormatting((text) => formatting.wrapLines(text, '> ', true))
 		)
 	);
 
 	// Register table formatting commands
 	context.subscriptions.push(
-		vscode.commands.registerCommand('markdown.reflowTable', () => 
+		vscode.commands.registerCommand('mdmarkup.reflowTable', () => 
 			applyTableFormatting((text) => formatting.reflowTable(text))
 		)
 	);
 
 	// Register heading commands (use line-based formatting)
 	context.subscriptions.push(
-		vscode.commands.registerCommand('markdown.formatHeading1', () => 
+		vscode.commands.registerCommand('mdmarkup.formatHeading1', () => 
 			applyLineBasedFormatting((text) => formatting.formatHeading(text, 1))
 		),
-		vscode.commands.registerCommand('markdown.formatHeading2', () => 
+		vscode.commands.registerCommand('mdmarkup.formatHeading2', () => 
 			applyLineBasedFormatting((text) => formatting.formatHeading(text, 2))
 		),
-		vscode.commands.registerCommand('markdown.formatHeading3', () => 
+		vscode.commands.registerCommand('mdmarkup.formatHeading3', () => 
 			applyLineBasedFormatting((text) => formatting.formatHeading(text, 3))
 		),
-		vscode.commands.registerCommand('markdown.formatHeading4', () => 
+		vscode.commands.registerCommand('mdmarkup.formatHeading4', () => 
 			applyLineBasedFormatting((text) => formatting.formatHeading(text, 4))
 		),
-		vscode.commands.registerCommand('markdown.formatHeading5', () => 
+		vscode.commands.registerCommand('mdmarkup.formatHeading5', () => 
 			applyLineBasedFormatting((text) => formatting.formatHeading(text, 5))
 		),
-		vscode.commands.registerCommand('markdown.formatHeading6', () => 
+		vscode.commands.registerCommand('mdmarkup.formatHeading6', () => 
 			applyLineBasedFormatting((text) => formatting.formatHeading(text, 6))
 		)
 	);
