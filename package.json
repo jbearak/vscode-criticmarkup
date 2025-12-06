@@ -163,11 +163,13 @@
     "submenus": [
       {
         "id": "markdown.annotations",
-        "label": "Markdown Annotations"
+        "label": "Markdown Annotations",
+        "icon": "$(comment-discussion)"
       },
       {
         "id": "markdown.formatting",
-        "label": "Markdown Formatting"
+        "label": "Markdown Formatting",
+        "icon": "$(edit)"
       },
       {
         "id": "markdown.heading",
